@@ -49,4 +49,4 @@ hdiutil verify ~/Desktop/MacCheck-1.0.dmg
 
 真实截图和报告通常包含序列号、设备名称、系统版本等信息。发布到 GitHub、官网或社交平台前，请先脱敏。
 
-本仓库 `docs/assets` 中的图片均为模拟数据，只用于功能展示。
+本仓库 `docs/assets` 中的图片为真机测试截图，已对序列号等敏感信息做打码处理。

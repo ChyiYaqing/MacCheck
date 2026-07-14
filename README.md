@@ -2,7 +2,7 @@
 
 MacCheck 是一款面向二手 Mac 交易、门店验机和个人自检的 macOS 本地验机工具。它会自动读取硬件规格、电池、存储、网络、安全与接口信息，并提供键盘、屏幕、音频、麦克风、摄像头、触控板、硬盘测速等交互测试，最后可导出 PDF 或 PNG 验机报告。
 
-> 隐私说明：MacCheck 默认完全本地运行，不上传序列号、检测结果或报告内容。README 中的图片均为脱敏演示图。
+> 隐私说明：MacCheck 默认完全本地运行，不上传序列号、检测结果或报告内容。README 中的图片为真机测试截图，序列号等敏感信息已打码。
 
 ![MacCheck overview](docs/assets/overview-demo.png)
 
@@ -16,7 +16,7 @@ MacCheck 是一款面向二手 Mac 交易、门店验机和个人自检的 macOS
 - AI 大模型可跑性建议，按本机内存估算本地模型适配度
 - 一键导出 PDF / PNG 长图报告，支持保存历史记录便于后续对比
 
-![MacCheck tests](docs/assets/testing-demo.png)
+![MacCheck hardware specs](docs/assets/hardware-specs-real.png)
 
 ## 系统要求
 
@@ -60,7 +60,9 @@ sudo xattr -rd com.apple.quarantine /Applications/MacCheck.app
 4. 点击“保存到历史”，保留本次检测快照。
 5. 点击“导出报告”，选择 PNG 长图或 PDF。
 
-![MacCheck report](docs/assets/report-demo.png)
+![MacCheck security checks](docs/assets/security-real.png)
+
+![MacCheck keyboard test](docs/assets/testing-demo.png)
 
 ## 源码构建
 

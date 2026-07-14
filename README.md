@@ -34,6 +34,24 @@ MacCheck 是一款面向二手 Mac 交易、门店验机和个人自检的 macOS
 
 当前发布脚本支持 Developer ID 签名与 Apple 公证。如果本机没有配置证书，会生成 ad-hoc 版本，适合本地测试；公开分发建议配置签名和公证。
 
+### 安装后无法打开怎么办
+
+如果 macOS 提示“无法打开，因为无法验证开发者”，可以先尝试右键点击 `MacCheck.app`，选择“打开”。
+
+如果仍然无法打开，或“隐私与安全性”里需要显示“任何来源”，可以打开“终端.app”执行：
+
+```bash
+sudo spctl --master-disable
+```
+
+执行后输入开机密码并回车。该命令会开启系统设置里的“任何来源”选项，会降低 Gatekeeper 保护，建议只在确认 App 来源可信时使用。
+
+如果 macOS 提示 App“已损坏，无法打开”，通常是下载隔离属性导致。确认已将 App 拖入 `/Applications` 后，在终端执行：
+
+```bash
+sudo xattr -rd com.apple.quarantine /Applications/MacCheck.app
+```
+
 ## 使用流程
 
 1. 打开 MacCheck，等待首页自动完成系统检测。

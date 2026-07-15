@@ -23,6 +23,7 @@
 		537DAF0304B333185993A12A /* CameraCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D0309D13DDB8639875A76F /* CameraCheckView.swift */; };
 		54BCA357B9659ADDF7B30195 /* KeyboardTestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E78B1058A1FE724F7A9F48 /* KeyboardTestModel.swift */; };
 		585FE00B0FCF0509EB54E680 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0D4EC52226B5AE07DBD5E4 /* SidebarView.swift */; };
+		5947C4CC610C837C3D2D35E2 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D249A27EF368B15A200974 /* SettingsView.swift */; };
 		5951CB364A55886817E40C9A /* ManagementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21057119E04A66673602986 /* ManagementService.swift */; };
 		5AC3A2D025BB04A4925D4387 /* PerformanceCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD901320FD3E226550C6D29 /* PerformanceCheckView.swift */; };
 		5C1765257FF35300DC35CD01 /* ReportModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371DF27B70402D1DF4814A49 /* ReportModel.swift */; };
@@ -59,6 +60,7 @@
 		2A0D4EC52226B5AE07DBD5E4 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		3228FA565E2EAA5B62D04B81 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		371DF27B70402D1DF4814A49 /* ReportModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportModel.swift; sourceTree = "<group>"; };
+		37D249A27EF368B15A200974 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		3F1C4C43B2B6E8F02D660D17 /* PortService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortService.swift; sourceTree = "<group>"; };
 		4115245B7958EDEA0E476CDE /* ScreenCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenCheckView.swift; sourceTree = "<group>"; };
 		41433486C70265B1304E21B3 /* SecurityChipService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityChipService.swift; sourceTree = "<group>"; };
@@ -302,6 +304,7 @@
 				0DF7DC1FCD3E942D729DAA93 /* HistoryView.swift */,
 				6AA4A79CB0FC9BF78491623B /* OverviewView.swift */,
 				B2C891817E99096D4F76EF66 /* RootView.swift */,
+				37D249A27EF368B15A200974 /* SettingsView.swift */,
 				2A0D4EC52226B5AE07DBD5E4 /* SidebarView.swift */,
 			);
 			path = UI;
@@ -443,6 +446,7 @@
 				1DDADB107795EC9EE09051CD /* ScreenCheckView.swift in Sources */,
 				25BE9C90A45ECC7E0210198F /* SecurityChipService.swift in Sources */,
 				40AB1557F676AD8B45196FB7 /* SerialDecoder.swift in Sources */,
+				5947C4CC610C837C3D2D35E2 /* SettingsView.swift in Sources */,
 				13CC6B4531E34C650700440F /* ShellRunner.swift in Sources */,
 				585FE00B0FCF0509EB54E680 /* SidebarView.swift in Sources */,
 				F39F8BBE17CEE2946637AF10 /* StorageService.swift in Sources */,

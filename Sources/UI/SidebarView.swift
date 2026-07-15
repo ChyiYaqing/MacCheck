@@ -8,6 +8,7 @@ struct SidebarView: View {
         List(selection: $model.selection) {
             row(.overview)
             row(.history)
+            row(.settings)
 
             Section("系统检测") {
                 ForEach(SidebarItem.autoCategories) { row($0) }

@@ -39,6 +39,8 @@ struct DetailRouter: View {
             AIModelsView()
         case .history:
             HistoryView()
+        case .settings:
+            SettingsView()
         default:
             CategoryDetailView(item: model.selection ?? .overview)
         }

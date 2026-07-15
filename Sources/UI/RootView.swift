@@ -2,6 +2,11 @@ import SwiftUI
 
 struct RootView: View {
     @StateObject private var model = AppModel()
+    @AppStorage("appTheme") private var themeRawValue = AppTheme.system.rawValue
+
+    private var preferredScheme: ColorScheme? {
+        (AppTheme(rawValue: themeRawValue) ?? .system).colorScheme
+    }
 
     var body: some View {
         ZStack {
@@ -19,6 +24,7 @@ struct RootView: View {
             }
         }
         .environmentObject(model)
+        .preferredColorScheme(preferredScheme)
         .animation(.easeInOut(duration: 0.2), value: model.fullscreenTest?.id)
         .task { await model.scanIfNeeded() }
     }

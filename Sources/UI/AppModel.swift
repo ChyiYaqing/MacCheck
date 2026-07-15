@@ -9,6 +9,7 @@ enum SidebarItem: String, CaseIterable, Identifiable, Hashable {
     case keyboard, screen, audio, microphone, camera, touchID, trackpad, performance, diskSpeed, portsLive
     case aiModels
     case history
+    case settings
 
     var id: String { rawValue }
 
@@ -33,6 +34,7 @@ enum SidebarItem: String, CaseIterable, Identifiable, Hashable {
         case .portsLive: return "接口逐口实测"
         case .aiModels: return "AI 大模型"
         case .history: return "历史记录"
+        case .settings: return "设置"
         }
     }
 
@@ -57,6 +59,7 @@ enum SidebarItem: String, CaseIterable, Identifiable, Hashable {
         case .portsLive: return "cable.connector.horizontal"
         case .aiModels: return "sparkles"
         case .history: return "clock.arrow.circlepath"
+        case .settings: return "gearshape.fill"
         }
     }
 
@@ -91,6 +94,7 @@ enum SidebarItem: String, CaseIterable, Identifiable, Hashable {
         case .portsLive: return ["portsLive"]
         case .aiModels: return []
         case .history: return []
+        case .settings: return []
         }
     }
 

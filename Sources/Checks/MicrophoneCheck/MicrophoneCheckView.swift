@@ -1,5 +1,6 @@
 import SwiftUI
 import AVFoundation
+import AppKit
 
 /// B4：麦克风测试。实时显示输入电平，用户对着麦克风说话看电平是否跳动。
 @MainActor
@@ -8,33 +9,83 @@ final class MicrophoneCheckModel: ObservableObject {
     @Published var peak: Double = 0
     @Published var isRunning = false
     @Published var permissionDenied = false
+    @Published var statusText = "准备中…"
+    @Published var errorText: String?
 
     private let engine = AVAudioEngine()
 
     func start() {
-        AVCaptureDevice.requestAccess(for: .audio) { [weak self] granted in
-            Task { @MainActor in
-                guard let self else { return }
-                if granted { self.beginTap() } else { self.permissionDenied = true }
+        guard !isRunning else { return }
+        permissionDenied = false
+        errorText = nil
+
+        switch AVCaptureDevice.authorizationStatus(for: .audio) {
+        case .authorized:
+            beginTap()
+        case .notDetermined:
+            statusText = "等待麦克风授权…"
+            AVCaptureDevice.requestAccess(for: .audio) { [weak self] granted in
+                Task { @MainActor in
+                    guard let self else { return }
+                    if granted {
+                        self.beginTap()
+                    } else {
+                        self.showPermissionDenied()
+                    }
+                }
             }
+        case .denied, .restricted:
+            showPermissionDenied()
+        @unknown default:
+            showPermissionDenied()
         }
+    }
+
+    private func showPermissionDenied() {
+        permissionDenied = true
+        isRunning = false
+        statusText = "麦克风权限未开启"
+        errorText = "请在系统设置中允许 MacCheck 访问麦克风，然后重新打开此测试。"
+    }
+
+    func openPrivacySettings() {
+        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone") {
+            NSWorkspace.shared.open(url)
+        }
+    }
+
+    func retry() {
+        stop()
+        start()
     }
 
     private func beginTap() {
         let input = engine.inputNode
         let format = input.inputFormat(forBus: 0)
-        // 关键：tap 回调在 AVFoundation 的实时音频线程执行，必须是 @Sendable（非隔离）闭包，
-        // 否则会继承外层 @MainActor 隔离、在音频线程触发执行器断言而崩溃。
+        guard format.channelCount > 0 else {
+            errorText = "未检测到可用的麦克风输入设备。"
+            statusText = "无法启动监听"
+            return
+        }
+
+        input.removeTap(onBus: 0)
         let block: @Sendable (AVAudioPCMBuffer, AVAudioTime) -> Void = { [weak self] buffer, _ in
             let normalized = MicrophoneCheckModel.level(from: buffer)
-            DispatchQueue.main.async { self?.updateLevel(normalized) }
+            DispatchQueue.main.async {
+                self?.updateLevel(normalized)
+            }
         }
         input.installTap(onBus: 0, bufferSize: 1024, format: format, block: block)
         do {
+            engine.prepare()
             try engine.start()
             isRunning = true
+            statusText = "正在监听…"
         } catch {
-            permissionDenied = true
+            input.removeTap(onBus: 0)
+            isRunning = false
+            statusText = "无法启动监听"
+            errorText = "麦克风监听启动失败：\(error.localizedDescription)"
         }
     }
 
@@ -75,10 +126,30 @@ struct MicrophoneCheckView: View {
             )
 
             if model.permissionDenied {
-                InlineNotice(icon: "exclamationmark.triangle.fill", tint: .orange,
-                    text: "麦克风权限被拒绝。请在「系统设置 › 隐私与安全性 › 麦克风」中允许 MacCheck。")
+                VStack(alignment: .leading, spacing: DS.Spacing.md) {
+                    InlineNotice(icon: "exclamationmark.triangle.fill", tint: .orange,
+                        text: model.errorText ?? "麦克风权限被拒绝。请在「系统设置 › 隐私与安全性 › 麦克风」中允许 MacCheck。")
+                    HStack(spacing: DS.Spacing.md) {
+                        Button {
+                            model.openPrivacySettings()
+                        } label: {
+                            Label("打开麦克风权限设置", systemImage: "gearshape")
+                        }
+                        .buttonStyle(.borderedProminent)
+
+                        Button {
+                            model.retry()
+                        } label: {
+                            Label("重新检测", systemImage: "arrow.clockwise")
+                        }
+                        .buttonStyle(.bordered)
+                    }
+                }
             } else {
                 levelMeter
+                if let error = model.errorText {
+                    InlineNotice(icon: "exclamationmark.triangle.fill", tint: .orange, text: error)
+                }
             }
 
             DS.Divider()
@@ -117,7 +188,7 @@ struct MicrophoneCheckView: View {
                 }
             }
             .frame(height: 28)
-            Text(model.isRunning ? "正在监听…" : "准备中…")
+            Text(model.statusText)
                 .font(DS.Font.caption).foregroundStyle(.secondary)
         }
     }

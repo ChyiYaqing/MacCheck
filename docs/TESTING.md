@@ -7,7 +7,7 @@
 ```bash
 xcodebuild -project MacCheck.xcodeproj -scheme MacCheck -configuration Release -derivedDataPath build_release CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=NO
 ./scripts/build_and_notarize.sh
-hdiutil verify ~/Desktop/MacCheck-1.1.dmg
+hdiutil verify ~/Desktop/MacCheck-1.2.dmg
 ```
 
 验证项：

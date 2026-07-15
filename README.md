@@ -28,7 +28,7 @@ MacCheck 是一款面向二手 Mac 交易、门店验机和个人自检的 macOS
 
 ## 快速安装
 
-1. 到 GitHub Releases 下载 `MacCheck-1.1.dmg`。
+1. 到 GitHub Releases 下载 `MacCheck-1.2.dmg`。
 2. 打开 DMG，将 `MacCheck.app` 拖到 `Applications`。
 3. 首次运行如果出现 Gatekeeper 提示，右键点击 App，选择“打开”。
 4. 摄像头、麦克风、蓝牙等项目会按需请求系统权限。
@@ -109,7 +109,7 @@ build_release/Build/Products/Release/MacCheck.app
 默认输出：
 
 ```text
-~/Desktop/MacCheck-1.1.dmg
+~/Desktop/MacCheck-1.2.dmg
 ```
 
 如果要正式分发，请先配置：
@@ -129,7 +129,7 @@ export MACCHECK_NOTARY_PROFILE="maccheck-notary"
 
 ```bash
 xcodebuild -project MacCheck.xcodeproj -scheme MacCheck -configuration Release -derivedDataPath build_release CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=NO
-hdiutil verify ~/Desktop/MacCheck-1.1.dmg
+hdiutil verify ~/Desktop/MacCheck-1.2.dmg
 codesign -dv --verbose=2 build_release/Build/Products/Release/MacCheck.app
 ```
 

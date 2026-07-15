@@ -18,7 +18,7 @@
 输出文件：
 
 ```text
-~/Desktop/MacCheck-1.1.dmg
+~/Desktop/MacCheck-1.2.dmg
 ```
 
 ## 签名和公证
@@ -46,9 +46,9 @@ export MACCHECK_NOTARY_PROFILE="maccheck-notary"
 ## GitHub Release
 
 ```bash
-gh release create v1.1 ~/Desktop/MacCheck-1.1.dmg \
+gh release create v1.2 ~/Desktop/MacCheck-1.2.dmg \
   --repo andyhuo520/MacCheck \
-  --title "MacCheck 1.1" \
+  --title "MacCheck 1.2" \
   --notes "首次发布：本地 Mac 验机、交互测试、报告导出。"
 ```
 

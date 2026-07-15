@@ -19,7 +19,7 @@ cd "$(dirname "$0")/.."
 PROJECT="MacCheck.xcodeproj"
 SCHEME="MacCheck"
 APP_NAME="MacCheck"
-VERSION="1.1"
+VERSION="1.2"
 BUILD_DIR="build_release"
 DMG_OUT="$HOME/Desktop/${APP_NAME}-${VERSION}.dmg"
 

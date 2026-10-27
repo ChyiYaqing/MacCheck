@@ -48,9 +48,24 @@ enum SMCService {
                      UInt8(0),UInt8(0),UInt8(0),UInt8(0),UInt8(0),UInt8(0),UInt8(0),UInt8(0))
     }
 
-    // P 核心 / GPU / 电池温度候选键（Apple Silicon，读取存在的取最大）
-    private static let cpuKeys = ["Tp01","Tp05","Tp09","Tp0D","Tp0T","Tp0X","Tp0b","Tp0f","Tp0j","Tp0n"]
-    private static let gpuKeys = ["Tg05","Tg0D","Tg0L","Tg0T"]
+    // 温度候选键：读取存在的取最大，不存在的键直接跳过（读失败开销极小）。
+    // Apple Silicon 各代键名不同；Intel 机型用 TC*/TG* 传统键（issue #1：Intel Mac 读不到温度）。
+    private static let cpuKeys = [
+        // M1
+        "Tp01","Tp05","Tp09","Tp0D","Tp0T","Tp0X","Tp0b","Tp0f","Tp0j","Tp0n",
+        // M2
+        "Tp1h","Tp1t","Tp1p","Tp1l",
+        // M3 / M4
+        "Tf04","Tf09","Tf0A","Tf0B","Tf0D","Tf0E","Tf44","Tf49","Tf4A","Tf4B","Tf4D","Tf4E",
+        // Intel
+        "TC0P","TC0D","TC0E","TC0F","TC0H","TC1C","TC2C","TC3C","TC4C","TCXC",
+    ]
+    private static let gpuKeys = [
+        "Tg05","Tg0D","Tg0L","Tg0T","Tg0f","Tg0j",
+        "Tf14","Tf18","Tf19","Tf1A","Tf24","Tf28","Tf29","Tf2A",
+        // Intel 核显 / 独显
+        "TG0P","TG0D","TG0H","TCGC",
+    ]
     private static let batteryKeys = ["TB1T","TB2T","TB0T"]
 
     private static func fourCC(_ s: String) -> UInt32 {

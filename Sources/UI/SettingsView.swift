@@ -9,9 +9,9 @@ enum AppTheme: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .system: return "跟随系统"
-        case .light: return "浅色"
-        case .dark: return "深色"
+        case .system: return L("跟随系统", "System")
+        case .light: return L("浅色", "Light")
+        case .dark: return L("深色", "Dark")
         }
     }
 
@@ -34,6 +34,7 @@ enum AppTheme: String, CaseIterable, Identifiable {
 
 struct SettingsView: View {
     @AppStorage("appTheme") private var themeRawValue = AppTheme.system.rawValue
+    @AppStorage(AppLanguage.storageKey) private var languageRawValue = AppLanguage.system.rawValue
 
     private var selectedTheme: Binding<AppTheme> {
         Binding {
@@ -48,8 +49,9 @@ struct SettingsView: View {
             VStack(alignment: .leading, spacing: DS.Spacing.lg) {
                 CheckHeader(
                     icon: "gearshape.fill",
-                    title: "设置",
-                    subtitle: "调整 MacCheck 的显示偏好。主题设置会保存在本机，下次打开自动沿用。"
+                    title: L("设置", "Settings"),
+                    subtitle: L("调整 MacCheck 的显示偏好。设置会保存在本机，下次打开自动沿用。",
+                                "Adjust how MacCheck looks. Settings are saved on this Mac and kept next time you open it.")
                 )
 
                 Card {
@@ -60,16 +62,43 @@ struct SettingsView: View {
                             .frame(width: 28)
 
                         VStack(alignment: .leading, spacing: DS.Spacing.sm) {
-                            Text("外观主题").font(DS.Font.bodyEmphasis)
-                            Text("选择跟随系统，或固定使用浅色 / 深色模式。")
+                            Text(L("外观主题", "Appearance")).font(DS.Font.bodyEmphasis)
+                            Text(L("选择跟随系统，或固定使用浅色 / 深色模式。", "Follow the system, or always use Light / Dark mode."))
                                 .font(DS.Font.body)
                                 .foregroundStyle(.secondary)
                                 .fixedSize(horizontal: false, vertical: true)
 
-                            Picker("外观主题", selection: selectedTheme) {
+                            Picker(L("外观主题", "Appearance"), selection: selectedTheme) {
                                 ForEach(AppTheme.allCases) { theme in
                                     Label(theme.title, systemImage: theme.icon)
                                         .tag(theme)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                            .labelsHidden()
+                            .padding(.top, DS.Spacing.xs)
+                        }
+                    }
+                }
+
+                Card {
+                    HStack(alignment: .top, spacing: DS.Spacing.md) {
+                        Image(systemName: "globe")
+                            .font(.system(size: 20))
+                            .foregroundStyle(.tint)
+                            .frame(width: 28)
+
+                        VStack(alignment: .leading, spacing: DS.Spacing.sm) {
+                            Text(L("语言", "Language")).font(DS.Font.bodyEmphasis)
+                            Text(L("默认跟随系统语言：系统为中文时显示中文，其余显示英文。切换后会自动重新扫描。",
+                                   "Follows the macOS language by default: Chinese if your system is in Chinese, English otherwise. MacCheck rescans after switching."))
+                                .font(DS.Font.body)
+                                .foregroundStyle(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+
+                            Picker(L("语言", "Language"), selection: $languageRawValue) {
+                                ForEach(AppLanguage.allCases) { language in
+                                    Text(language.title).tag(language.rawValue)
                                 }
                             }
                             .pickerStyle(.segmented)
@@ -83,6 +112,6 @@ struct SettingsView: View {
             .frame(maxWidth: 720)
             .frame(maxWidth: .infinity, alignment: .center)
         }
-        .navigationTitle("设置")
+        .navigationTitle(L("设置", "Settings"))
     }
 }

@@ -10,12 +10,12 @@ struct SidebarView: View {
             row(.history)
             row(.settings)
 
-            Section("系统检测") {
+            Section(L("系统检测", "System Checks")) {
                 ForEach(SidebarItem.autoCategories) { row($0) }
                 row(.aiModels)
             }
 
-            Section("硬件测试") {
+            Section(L("硬件测试", "Hardware Tests")) {
                 ForEach(SidebarItem.interactiveTests) { row($0) }
             }
         }
@@ -49,10 +49,10 @@ struct SidebarView: View {
             HStack(spacing: DS.Spacing.sm) {
                 if model.isScanning {
                     ProgressView().controlSize(.small)
-                    Text("正在扫描…").font(DS.Font.caption).foregroundStyle(.secondary)
+                    Text(L("正在扫描…", "Scanning…")).font(DS.Font.caption).foregroundStyle(.secondary)
                 } else {
                     Image(systemName: "checkmark.seal.fill").foregroundStyle(.green).font(.system(size: 12))
-                    Text("已完成系统扫描").font(DS.Font.caption).foregroundStyle(.secondary)
+                    Text(L("已完成系统扫描", "System scan complete")).font(DS.Font.caption).foregroundStyle(.secondary)
                 }
                 Spacer()
                 Button {
@@ -62,7 +62,7 @@ struct SidebarView: View {
                 }
                 .buttonStyle(.borderless)
                 .disabled(model.isScanning)
-                .help("重新扫描")
+                .help(L("重新扫描", "Rescan"))
             }
             .padding(.horizontal, DS.Spacing.md)
             .padding(.vertical, DS.Spacing.sm)

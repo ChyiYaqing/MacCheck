@@ -1,5 +1,7 @@
 # 发布说明
 
+**中文** | [English](RELEASE.en.md)
+
 ## 版本号
 
 当前版本号在 `Sources/App/Info.plist` 中维护：
@@ -18,7 +20,7 @@
 输出文件：
 
 ```text
-~/Desktop/MacCheck-1.2.dmg
+~/Desktop/MacCheck-1.3.dmg
 ```
 
 ## 签名和公证
@@ -46,9 +48,9 @@ export MACCHECK_NOTARY_PROFILE="maccheck-notary"
 ## GitHub Release
 
 ```bash
-gh release create v1.2 ~/Desktop/MacCheck-1.2.dmg \
+gh release create v1.3 ~/Desktop/MacCheck-1.3.dmg \
   --repo andyhuo520/MacCheck \
-  --title "MacCheck 1.2" \
+  --title "MacCheck 1.3" \
   --notes "首次发布：本地 Mac 验机、交互测试、报告导出。"
 ```
 

@@ -66,11 +66,11 @@ extension CheckStatus {
 
     var label: String {
         switch self {
-        case .pass: return "正常"
-        case .warning: return "注意"
-        case .redFlag: return "严重"
-        case .skipped: return "已跳过"
-        case .unsupported: return "不适用"
+        case .pass: return L("正常", "Passed")
+        case .warning: return L("注意", "Warning")
+        case .redFlag: return L("严重", "Major issue")
+        case .skipped: return L("已跳过", "Skipped")
+        case .unsupported: return L("不适用", "Not supported")
         }
     }
 }

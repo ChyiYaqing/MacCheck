@@ -6,26 +6,45 @@ struct KeyDef: Identifiable, Hashable {
     let keyCode: UInt16
     let label: String
     let widthUnits: CGFloat
+    /// 同一个物理键可能发出的其他事件码：顶排默认是亮度/音量等媒体键（不按 fn 时），
+    /// 收到这些码也算该键已测。媒体键码 = `KeyboardLayout.mediaBase + NX_KEYTYPE_*`。
+    let altCodes: [UInt16]
 
-    init(_ keyCode: UInt16, _ label: String, width: CGFloat = 1.0) {
+    init(_ keyCode: UInt16, _ label: String, width: CGFloat = 1.0, alt: [UInt16] = []) {
         self.id = keyCode
         self.keyCode = keyCode
         self.label = label
         self.widthUnits = width
+        self.altCodes = alt
     }
+
+    var allCodes: [UInt16] { [keyCode] + altCodes }
 }
 
 /// 标准 macOS 美式 ANSI 键盘布局（无 Touch Bar）。虚拟 keyCode 定义参考 Carbon HIToolbox `Events.h`。
 /// 说明：为简化渲染模型，方向键簇按四个等大按键横排展示，与实体键盘上下堆叠的 ↑/↓ 略有出入，
 /// 不影响功能测试（每个方向键仍独立可测）。
 enum KeyboardLayout {
+    /// 媒体键（NSEvent.systemDefined, subtype 8）映射到的合成键码起点，避开真实虚拟键码范围。
+    static let mediaBase: UInt16 = 0x1000
+    private static func media(_ nxKeyType: UInt16) -> UInt16 { mediaBase + nxKeyType }
+
+    // NX_KEYTYPE_*（IOKit/hidsystem/ev_keymap.h）
+    private static let soundUp = media(0), soundDown = media(1), brightnessUp = media(2), brightnessDown = media(3)
+    private static let mute = media(7), play = media(16), next = media(17), previous = media(18)
+    private static let fast = media(19), rewind = media(20), illumUp = media(21), illumDown = media(22)
+
     static let rows: [[KeyDef]] = [
-        // 功能键行
+        // 功能键行：Apple 键盘顶排默认是媒体功能，按 fn 才是 F1–F12，两种都算已测（issue #5）。
+        // F3–F6 在不同年代机型上是调度中心/启动台/聚焦/听写/勿扰，部分被系统直接拦截，可点击键位手动确认。
         [
             KeyDef(53, "esc"),
-            KeyDef(122, "F1"), KeyDef(120, "F2"), KeyDef(99, "F3"), KeyDef(118, "F4"),
-            KeyDef(96, "F5"), KeyDef(97, "F6"), KeyDef(98, "F7"), KeyDef(100, "F8"),
-            KeyDef(101, "F9"), KeyDef(109, "F10"), KeyDef(103, "F11"), KeyDef(111, "F12"),
+            KeyDef(122, "F1", alt: [brightnessDown]), KeyDef(120, "F2", alt: [brightnessUp]),
+            KeyDef(99, "F3", alt: [160]), KeyDef(118, "F4", alt: [131, 177]),
+            KeyDef(96, "F5", alt: [176, illumDown]), KeyDef(97, "F6", alt: [178, illumUp]),
+            KeyDef(98, "F7", alt: [rewind, previous]), KeyDef(100, "F8", alt: [play]),
+            KeyDef(101, "F9", alt: [fast, next]), KeyDef(109, "F10", alt: [mute]),
+            KeyDef(103, "F11", alt: [soundDown]), KeyDef(111, "F12", alt: [soundUp]),
         ],
         // 数字行
         [
@@ -69,4 +88,11 @@ enum KeyboardLayout {
 
     static var allKeys: [KeyDef] { rows.flatMap { $0 } }
     static var totalKeyCount: Int { allKeys.count }
+
+    /// 任意事件码 → 布局里的主 keyCode（媒体键/特殊键归并到对应 F 键）。
+    static let canonicalCode: [UInt16: UInt16] = {
+        var map: [UInt16: UInt16] = [:]
+        for key in allKeys { for code in key.allCodes { map[code] = key.keyCode } }
+        return map
+    }()
 }

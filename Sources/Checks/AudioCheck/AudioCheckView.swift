@@ -59,17 +59,18 @@ struct AudioCheckView: View {
         VStack(alignment: .leading, spacing: DS.Spacing.lg) {
             CheckHeader(
                 icon: "speaker.wave.3.fill",
-                title: "扬声器 / 耳机测试",
-                subtitle: "分别播放左右声道，确认两侧都能听到清晰的声音。插入耳机可同时验证耳机接口。"
+                title: L("扬声器 / 耳机测试", "Speaker / Headphone Test"),
+                subtitle: L("分别播放左右声道，确认两侧都能听到清晰的声音。插入耳机可同时验证耳机接口。",
+                            "Play the left and right channels one at a time and make sure both sides sound clear. Plug in headphones to check the headphone jack too.")
             )
 
             HStack(spacing: DS.Spacing.md) {
-                channelButton(title: "播放左声道", channel: 0, icon: "l.circle.fill")
-                channelButton(title: "播放右声道", channel: 1, icon: "r.circle.fill")
+                channelButton(title: L("播放左声道", "Play Left"), channel: 0, icon: "l.circle.fill")
+                channelButton(title: L("播放右声道", "Play Right"), channel: 1, icon: "r.circle.fill")
                 Button {
                     model.stop()
                 } label: {
-                    Label("停止", systemImage: "stop.fill")
+                    Label(L("停止", "Stop"), systemImage: "stop.fill")
                 }
                 .buttonStyle(.bordered)
                 .controlSize(.large)
@@ -78,24 +79,25 @@ struct AudioCheckView: View {
             DS.Divider()
 
             HStack(spacing: DS.Spacing.md) {
-                Text("测试结果：").font(DS.Font.body).foregroundStyle(.secondary)
-                Button("左右都正常") {
+                Text(L("测试结果：", "Result:")).font(DS.Font.body).foregroundStyle(.secondary)
+                Button(L("左右都正常", "Both Sides OK")) {
                     model.teardown()
-                    onComplete(CheckResult(id: "audio", title: "扬声器 / 耳机", status: .pass,
-                        summary: "左右声道均可正常播放", rawDetails: ["左声道": "正常", "右声道": "正常"]))
+                    onComplete(CheckResult(id: "audio", title: L("扬声器 / 耳机", "Speakers / Headphones"), status: .pass,
+                        summary: L("左右声道均可正常播放", "Left and right channels both play normally"),
+                        rawDetails: [L("左声道", "Left channel"): L("正常", "OK"), L("右声道", "Right channel"): L("正常", "OK")]))
                 }
                 .buttonStyle(.borderedProminent)
-                Button("有声道异常") {
+                Button(L("有声道异常", "A Channel Has Problems")) {
                     model.teardown()
-                    onComplete(CheckResult(id: "audio", title: "扬声器 / 耳机", status: .warning,
-                        summary: "用户反馈有声道异常，建议进一步检查扬声器或耳机口",
-                        rawDetails: ["用户判断": "存在异常"]))
+                    onComplete(CheckResult(id: "audio", title: L("扬声器 / 耳机", "Speakers / Headphones"), status: .warning,
+                        summary: L("用户反馈有声道异常，建议进一步检查扬声器或耳机口", "User reported a problem with a channel; check the speakers or headphone jack"),
+                        rawDetails: [L("用户判断", "User verdict"): L("存在异常", "Problem found")]))
                 }
                 .buttonStyle(.bordered)
             }
         }
         .padding(DS.Spacing.xl)
-        .checkPane("扬声器 / 耳机")
+        .checkPane(L("扬声器 / 耳机", "Speakers / Headphones"))
         .onDisappear { model.teardown() }
     }
 

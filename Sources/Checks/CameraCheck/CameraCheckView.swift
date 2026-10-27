@@ -69,13 +69,13 @@ struct CameraCheckView: View {
         VStack(alignment: .leading, spacing: DS.Spacing.lg) {
             CheckHeader(
                 icon: "camera.fill",
-                title: "摄像头测试",
-                subtitle: "观察下方预览画面：是否清晰、有无坏点、色斑或明显偏色。"
+                title: L("摄像头测试", "Camera Test"),
+                subtitle: L("观察下方预览画面：是否清晰、有无坏点、色斑或明显偏色。", "Check the preview below: is it sharp, free of dead pixels, blotches or an obvious color cast?")
             )
 
             if model.permissionDenied {
                 InlineNotice(icon: "exclamationmark.triangle.fill", tint: .orange,
-                    text: "摄像头权限被拒绝。请在「系统设置 › 隐私与安全性 › 摄像头」中允许 MacCheck。")
+                    text: L("摄像头权限被拒绝。请在「系统设置 › 隐私与安全性 › 摄像头」中允许 MacCheck。", "Camera access was denied. Allow MacCheck in System Settings › Privacy & Security › Camera."))
             } else {
                 CameraPreview(session: model.session)
                     .frame(height: 320)
@@ -86,23 +86,23 @@ struct CameraCheckView: View {
             DS.Divider()
 
             HStack(spacing: DS.Spacing.md) {
-                Text("测试结果：").font(DS.Font.body).foregroundStyle(.secondary)
-                Button("画面清晰正常") {
+                Text(L("测试结果：", "Result:")).font(DS.Font.body).foregroundStyle(.secondary)
+                Button(L("画面清晰正常", "Picture Looks Good")) {
                     model.stop()
-                    onComplete(CheckResult(id: "camera", title: "摄像头", status: .pass,
-                        summary: "摄像头画面清晰，无坏点或异常"))
+                    onComplete(CheckResult(id: "camera", title: L("摄像头", "Camera"), status: .pass,
+                        summary: L("摄像头画面清晰，无坏点或异常", "Camera picture is clear, with no dead pixels or problems")))
                 }
                 .buttonStyle(.borderedProminent)
-                Button("画面异常") {
+                Button(L("画面异常", "Picture Has Problems")) {
                     model.stop()
-                    onComplete(CheckResult(id: "camera", title: "摄像头", status: .warning,
-                        summary: "用户反馈画面异常，建议进一步检查摄像头"))
+                    onComplete(CheckResult(id: "camera", title: L("摄像头", "Camera"), status: .warning,
+                        summary: L("用户反馈画面异常，建议进一步检查摄像头", "User reported a picture problem; worth a closer look at the camera")))
                 }
                 .buttonStyle(.bordered)
             }
         }
         .padding(DS.Spacing.xl)
-        .checkPane("摄像头")
+        .checkPane(L("摄像头", "Camera"))
         .onAppear { model.start() }
         .onDisappear { model.stop() }
     }

@@ -3,6 +3,7 @@ import SwiftUI
 struct RootView: View {
     @StateObject private var model = AppModel()
     @AppStorage("appTheme") private var themeRawValue = AppTheme.system.rawValue
+    @AppStorage(AppLanguage.storageKey) private var languageRawValue = AppLanguage.system.rawValue
 
     private var preferredScheme: ColorScheme? {
         (AppTheme(rawValue: themeRawValue) ?? .system).colorScheme
@@ -16,21 +17,28 @@ struct RootView: View {
                 DetailRouter()
             }
             .disabled(model.fullscreenTest != nil)
-
-            if let test = model.fullscreenTest {
-                fullscreenOverlay(test)
-                    .transition(.opacity)
-                    .zIndex(1)
-            }
+            // 语言切换后整棵视图重建，所有 L(...) 文案即时刷新
+            .id(languageRawValue)
         }
         .environmentObject(model)
         .preferredColorScheme(preferredScheme)
-        .animation(.easeInOut(duration: 0.2), value: model.fullscreenTest?.id)
         .task { await model.scanIfNeeded() }
+        .onChange(of: languageRawValue) {
+            // 自动检测结果的文案是扫描时生成的，切换语言后重扫一遍
+            Task { await model.rescan() }
+        }
+        .onChange(of: model.fullscreenTest?.id) {
+            if let test = model.fullscreenTest {
+                let screen = NSApp.keyWindow?.screen ?? NSApp.mainWindow?.screen
+                FullscreenPresenter.present(fullscreenContent(test), on: screen)
+            } else {
+                FullscreenPresenter.dismiss()
+            }
+        }
     }
 
     @ViewBuilder
-    private func fullscreenOverlay(_ test: FullscreenTest) -> some View {
+    private func fullscreenContent(_ test: FullscreenTest) -> some View {
         switch test {
         case .keyboard:
             KeyboardCheckView { result in

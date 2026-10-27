@@ -22,7 +22,7 @@ struct ReportDocumentView: View {
     private var header: some View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 6) {
-                Text("MacCheck 验机报告")
+                Text(L("MacCheck 验机报告", "MacCheck Inspection Report"))
                     .font(.system(size: 22, weight: .bold))
                     .foregroundStyle(.black)
                 Text(profile?.marketingName ?? "")
@@ -31,7 +31,7 @@ struct ReportDocumentView: View {
                 if let p = profile {
                     Text("\(p.chip) · \(p.memory) · \(p.macOSVersion)")
                         .font(.system(size: 12)).foregroundStyle(.gray)
-                    Text("序列号 \(p.serialNumber) · \(p.modelIdentifier)")
+                    Text(L("序列号 \(p.serialNumber) · \(p.modelIdentifier)", "Serial number \(p.serialNumber) · \(p.modelIdentifier)"))
                         .font(.system(size: 11, design: .monospaced)).foregroundStyle(.gray)
                 }
             }
@@ -40,7 +40,7 @@ struct ReportDocumentView: View {
                 Text("\(report.score)")
                     .font(.system(size: 40, weight: .heavy))
                     .foregroundStyle(scoreColor)
-                Text("综合评分").font(.system(size: 11)).foregroundStyle(.gray)
+                Text(L("综合评分", "Overall score")).font(.system(size: 11)).foregroundStyle(.gray)
             }
         }
     }
@@ -53,7 +53,7 @@ struct ReportDocumentView: View {
 
     private var redFlags: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("⛔ 重大问题").font(.system(size: 14, weight: .bold)).foregroundStyle(.red)
+            Text(L("⛔ 重大问题", "⛔ Major Issues")).font(.system(size: 14, weight: .bold)).foregroundStyle(.red)
             ForEach(report.redFlags) { flag in
                 Text(flag.isRedFlagHeadline ?? flag.summary)
                     .font(.system(size: 12)).foregroundStyle(.black)
@@ -67,7 +67,7 @@ struct ReportDocumentView: View {
 
     private var resultsTable: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("检测明细").font(.system(size: 14, weight: .bold)).foregroundStyle(.black)
+            Text(L("检测明细", "Check Details")).font(.system(size: 14, weight: .bold)).foregroundStyle(.black)
                 .padding(.bottom, 8)
             ForEach(report.results) { r in
                 HStack(alignment: .top, spacing: 8) {
@@ -86,8 +86,8 @@ struct ReportDocumentView: View {
 
     private var footer: some View {
         VStack(alignment: .leading, spacing: 3) {
-            Text("检测时间：\(report.generatedAt.formatted(date: .abbreviated, time: .shortened)) · MacCheck v\(report.appVersion)")
-            Text("本报告由 MacCheck 本地生成，不联网、不上传任何数据。结果仅供参考，不构成质保。")
+            Text(L("检测时间：\(report.generatedAt.formatted(date: .abbreviated, time: .shortened)) · MacCheck v\(report.appVersion)", "Checked: \(report.generatedAt.formatted(date: .abbreviated, time: .shortened)) · MacCheck v\(report.appVersion)"))
+            Text(L("本报告由 MacCheck 本地生成，不联网、不上传任何数据。结果仅供参考，不构成质保。", "Generated locally by MacCheck — nothing is sent online or uploaded. Results are for reference only and are not a warranty."))
         }
         .font(.system(size: 10)).foregroundStyle(.gray)
     }

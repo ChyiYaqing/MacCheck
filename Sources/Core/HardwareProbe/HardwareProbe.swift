@@ -72,9 +72,13 @@ enum HardwareProbe {
 
     static func chipString() -> String {
         let sp = systemProfilerHardwareJSON()
-        if let chip = sp["chip_type"] as? String { return chip }
-        if let cpu = sp["cpu_type"] as? String { return cpu }
-        return sysctlString("machdep.cpu.brand_string")
+        // 「Unknown」是占位值（例如经 Rosetta 转译运行时），不能当真，继续往下兜底
+        func usable(_ v: Any?) -> String? {
+            guard let s = (v as? String)?.trimmingCharacters(in: .whitespaces),
+                  !s.isEmpty, s.lowercased() != "unknown" else { return nil }
+            return s
+        }
+        return usable(sp["chip_type"]) ?? usable(sp["cpu_type"]) ?? sysctlString("machdep.cpu.brand_string")
     }
 
     static func macOSVersionString() -> String {
@@ -130,27 +134,27 @@ enum HardwareProbe {
         if ioSerial.isEmpty && spSerial.isEmpty {
             results.append(CheckResult(
                 id: "hardware.serial",
-                title: "序列号核验",
+                title: L("序列号核验", "Serial number check"),
                 status: .warning,
-                summary: "未能读取到序列号，可能是虚拟机或权限受限环境",
+                summary: L("未能读取到序列号，可能是虚拟机或权限受限环境", "Couldn’t read the serial number; this may be a virtual machine or a restricted environment"),
                 rawDetails: ["IOKit": ioSerial, "system_profiler": spSerial]
             ))
         } else if !ioSerial.isEmpty && !spSerial.isEmpty && ioSerial != spSerial {
             results.append(CheckResult(
                 id: "hardware.serial",
-                title: "序列号核验",
+                title: L("序列号核验", "Serial number check"),
                 status: .redFlag,
-                summary: "两种方式读到的序列号不一致，本机数据可能被篡改",
-                rawDetails: ["IOKit 读取": ioSerial, "system_profiler 读取": spSerial],
-                isRedFlagHeadline: "⛔ 序列号交叉核对不一致（IOKit 与系统信息给出的结果不同），本机关键信息可能被篡改，请勿仅凭本报告交易，建议用序列号去 Apple 官网保修查询页核对真实性。"
+                summary: L("两种方式读到的序列号不一致，本机数据可能被篡改", "Two independent readings of the serial number disagree; this Mac’s data may have been tampered with"),
+                rawDetails: [L("IOKit 读取", "IOKit reading"): ioSerial, L("system_profiler 读取", "system_profiler reading"): spSerial],
+                isRedFlagHeadline: L("⛔ 序列号交叉核对不一致（IOKit 与系统信息给出的结果不同），本机关键信息可能被篡改，请勿仅凭本报告交易，建议用序列号去 Apple 官网保修查询页核对真实性。", "⛔ The serial number cross-check failed (IOKit and System Information report different values). Key details of this Mac may have been altered. Don’t rely on this report alone; verify the serial number on Apple’s Check Coverage page.")
             ))
         } else {
             results.append(CheckResult(
                 id: "hardware.serial",
-                title: "序列号核验",
+                title: L("序列号核验", "Serial number check"),
                 status: .pass,
-                summary: "序列号 \(ioSerial.isEmpty ? spSerial : ioSerial)，两种读取方式一致，去 Apple 官网可查保修状态",
-                rawDetails: ["序列号": ioSerial.isEmpty ? spSerial : ioSerial, "机型标识交叉核对": model == spModel || spModel.isEmpty ? "一致" : "不一致（\(model) vs \(spModel)）"]
+                summary: L("序列号 \(ioSerial.isEmpty ? spSerial : ioSerial)，两种读取方式一致，去 Apple 官网可查保修状态", "Serial number \(ioSerial.isEmpty ? spSerial : ioSerial) matches across both readings; you can check its warranty status on Apple’s website"),
+                rawDetails: [L("序列号", "Serial number"): ioSerial.isEmpty ? spSerial : ioSerial, L("机型标识交叉核对", "Model identifier cross-check"): model == spModel || spModel.isEmpty ? L("一致", "Match") : L("不一致（\(model) vs \(spModel)）", "Mismatch (\(model) vs \(spModel))")]
             ))
         }
 

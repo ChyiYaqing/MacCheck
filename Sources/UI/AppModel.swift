@@ -15,26 +15,26 @@ enum SidebarItem: String, CaseIterable, Identifiable, Hashable {
 
     var title: String {
         switch self {
-        case .overview: return "概览"
-        case .specs: return "硬件规格"
-        case .battery: return "电池"
-        case .security: return "安全与锁定"
-        case .storage: return "存储"
-        case .network: return "网络"
-        case .ports: return "接口"
-        case .keyboard: return "键盘"
-        case .screen: return "屏幕"
-        case .audio: return "扬声器 / 耳机"
-        case .microphone: return "麦克风"
-        case .camera: return "摄像头"
+        case .overview: return L("概览", "Overview")
+        case .specs: return L("硬件规格", "Specs")
+        case .battery: return L("电池", "Battery")
+        case .security: return L("安全与锁定", "Security & Locks")
+        case .storage: return L("存储", "Storage")
+        case .network: return L("网络", "Network")
+        case .ports: return L("接口", "Ports")
+        case .keyboard: return L("键盘", "Keyboard")
+        case .screen: return L("屏幕", "Display")
+        case .audio: return L("扬声器 / 耳机", "Speakers / Headphones")
+        case .microphone: return L("麦克风", "Microphone")
+        case .camera: return L("摄像头", "Camera")
         case .touchID: return "Touch ID"
-        case .trackpad: return "触控板"
-        case .performance: return "性能压测"
-        case .diskSpeed: return "硬盘测速"
-        case .portsLive: return "接口逐口实测"
-        case .aiModels: return "AI 大模型"
-        case .history: return "历史记录"
-        case .settings: return "设置"
+        case .trackpad: return L("触控板", "Trackpad")
+        case .performance: return L("性能压测", "Stress Test")
+        case .diskSpeed: return L("硬盘测速", "Disk Speed")
+        case .portsLive: return L("接口逐口实测", "Port-by-Port Test")
+        case .aiModels: return L("AI 大模型", "AI Models")
+        case .history: return L("历史记录", "History")
+        case .settings: return L("设置", "Settings")
         }
     }
 
@@ -184,7 +184,7 @@ final class AppModel: ObservableObject {
     // MARK: - 历史记录
 
     func currentBatteryCycles() -> Int? {
-        autoResults["battery.cycleCount"]?.rawDetails["循环次数"].flatMap { Int($0) }
+        autoResults["battery.cycleCount"]?.rawDetails[L("循环次数", "Cycle count")].flatMap { Int($0) }
     }
 
     func currentBatteryHealth() -> String? {

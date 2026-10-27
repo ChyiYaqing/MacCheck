@@ -1,5 +1,7 @@
 # MacCheck 验机宝
 
+**中文** | [English](README.en.md)
+
 MacCheck 是一款面向二手 Mac 交易、门店验机和个人自检的 macOS 本地验机工具。它会自动读取硬件规格、电池、存储、网络、安全与接口信息，并提供键盘、屏幕、音频、麦克风、摄像头、触控板、硬盘测速等交互测试，最后可导出 PDF 或 PNG 验机报告。
 
 > 隐私说明：MacCheck 默认完全本地运行，不上传序列号、检测结果或报告内容。README 中的图片为真机测试截图，序列号等敏感信息已打码。
@@ -28,10 +30,12 @@ MacCheck 是一款面向二手 Mac 交易、门店验机和个人自检的 macOS
 
 ## 快速安装
 
-1. 到 GitHub Releases 下载 `MacCheck-1.2.dmg`。
+1. 到 GitHub Releases 下载 `MacCheck-1.3.dmg`。
 2. 打开 DMG，将 `MacCheck.app` 拖到 `Applications`。
 3. 首次运行如果出现 Gatekeeper 提示，右键点击 App，选择“打开”。
 4. 摄像头、麦克风、蓝牙等项目会按需请求系统权限。
+
+从 v1.3 起 DMG 为 Universal 通用版，Apple Silicon 与 Intel Mac（macOS 14+）均可运行。
 
 当前发布脚本支持 Developer ID 签名与 Apple 公证。如果本机没有配置证书，会生成 ad-hoc 版本，适合本地测试；公开分发建议配置签名和公证。
 
@@ -109,7 +113,7 @@ build_release/Build/Products/Release/MacCheck.app
 默认输出：
 
 ```text
-~/Desktop/MacCheck-1.2.dmg
+~/Desktop/MacCheck-1.3.dmg
 ```
 
 如果要正式分发，请先配置：
@@ -128,8 +132,8 @@ export MACCHECK_NOTARY_PROFILE="maccheck-notary"
 本地基础验证：
 
 ```bash
-xcodebuild -project MacCheck.xcodeproj -scheme MacCheck -configuration Release -derivedDataPath build_release CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=NO
-hdiutil verify ~/Desktop/MacCheck-1.2.dmg
+xcodebuild -project MacCheck.xcodeproj -scheme MacCheck -configuration Release -destination 'generic/platform=macOS' -derivedDataPath build_release CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=NO
+hdiutil verify ~/Desktop/MacCheck-1.3.dmg
 codesign -dv --verbose=2 build_release/Build/Products/Release/MacCheck.app
 ```
 

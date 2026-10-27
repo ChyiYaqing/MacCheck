@@ -1,0 +1,4 @@
+"CFBundleDisplayName" = "MacCheck";
+"NSCameraUsageDescription" = "Used by the camera check to confirm the picture is clear and free of dead pixels.";
+"NSMicrophoneUsageDescription" = "Used by the microphone check to confirm recording works.";
+"NSBluetoothAlwaysUsageDescription" = "Used by the Bluetooth check to scan nearby devices and verify the radio works.";

@@ -18,7 +18,7 @@ enum DeviceNaming {
             .trimmingCharacters(in: CharacterSet(charactersIn: "\0").union(.whitespaces))
     }
 
-    /// 对外：给出中文风格的展示名。
+    /// 对外：给出展示名（中文界面为中文风格，英文界面保留原始英文营销名）。
     /// "MacBook Pro (14-inch, 2021)" → "MacBook Pro（14 英寸，2021）"
     static func friendlyName(fallbackMachineName: String, identifier: String) -> String {
         var name = rawMarketingName()
@@ -28,6 +28,8 @@ enum DeviceNaming {
     }
 
     private static func localize(_ input: String) -> String {
+        // 英文界面直接保留 Apple 原始英文营销名，如 "MacBook Pro (14-inch, 2021)"。
+        guard !AppLanguage.isEnglish else { return input }
         var s = input
         s = s.replacingOccurrences(of: "-inch", with: " 英寸")
         s = s.replacingOccurrences(of: "‑inch", with: " 英寸") // 防非断字连字符

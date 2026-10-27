@@ -12,7 +12,7 @@ enum ReportExporter {
         let renderer = ImageRenderer(content: doc)
         renderer.scale = 2.0   // Retina 清晰度
 
-        let base = "MacCheck-验机报告-\(fileTimestamp(report.generatedAt))"
+        let base = L("MacCheck-验机报告-\(fileTimestamp(report.generatedAt))", "MacCheck-Report-\(fileTimestamp(report.generatedAt))")
 
         switch format {
         case .png:

@@ -19,7 +19,7 @@ cd "$(dirname "$0")/.."
 PROJECT="MacCheck.xcodeproj"
 SCHEME="MacCheck"
 APP_NAME="MacCheck"
-VERSION="1.2"
+VERSION="1.3"
 BUILD_DIR="build_release"
 DMG_OUT="$HOME/Desktop/${APP_NAME}-${VERSION}.dmg"
 
@@ -32,11 +32,17 @@ command -v xcodegen >/dev/null && xcodegen generate
 
 echo "▸ Release 构建"
 rm -rf "$BUILD_DIR"
+# 必须指定 generic 目标：否则新版 Xcode 只编当前机器的架构，产物在 Intel Mac 上打不开（issue #1）
 xcodebuild -project "$PROJECT" -scheme "$SCHEME" -configuration Release \
+  -destination 'generic/platform=macOS' \
   -derivedDataPath "$BUILD_DIR" \
+  ARCHS="arm64 x86_64" ONLY_ACTIVE_ARCH=NO \
   CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=NO | tail -1
 
 APP="$BUILD_DIR/Build/Products/Release/${APP_NAME}.app"
+echo "▸ 架构检查（必须同时含 arm64 与 x86_64）"
+lipo -info "$APP/Contents/MacOS/$APP_NAME"
+lipo "$APP/Contents/MacOS/$APP_NAME" -verify_arch arm64 x86_64
 
 HAS_CERT=$(security find-identity -v -p codesigning 2>/dev/null | grep -c "Developer ID Application" || true)
 if [ "$HAS_CERT" -gt 0 ]; then

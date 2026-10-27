@@ -25,8 +25,8 @@ final class TrackpadCheckModel: ObservableObject {
 
     var coverageHint: String {
         var parts: [String] = []
-        parts.append("轨迹点 \(trail.count)")
-        if !gesturesSeen.isEmpty { parts.append("手势 \(gesturesSeen.count)/3") }
+        parts.append(L("轨迹点 \(trail.count)", "Points \(trail.count)"))
+        if !gesturesSeen.isEmpty { parts.append(L("手势 \(gesturesSeen.count)/3", "Gestures \(gesturesSeen.count)/3")) }
         if didForceClick { parts.append("Force Touch ✓") }
         return parts.joined(separator: " · ")
     }
@@ -79,41 +79,42 @@ struct TrackpadCheckView: View {
         VStack(alignment: .leading, spacing: DS.Spacing.lg) {
             CheckHeader(
                 icon: "rectangle.and.hand.point.up.left.fill",
-                title: "触控板测试",
-                subtitle: "在下方区域滑动画线检查跟手，尝试双指缩放/旋转/滚动，用力按一下测 Force Touch 压感。"
+                title: L("触控板测试", "Trackpad Test"),
+                subtitle: L("在下方区域滑动画线检查跟手，尝试双指缩放/旋转/滚动，用力按一下测 Force Touch 压感。",
+                            "Draw in the area below to check tracking, try two-finger pinch, rotate and scroll, then press firmly to test Force Touch.")
             )
 
             canvas
 
             HStack(spacing: DS.Spacing.lg) {
-                metric("压力", String(format: "%.2f", model.pressure), model.pressure > 0)
-                metric("Force Touch", model.didForceClick ? "已触发" : "未触发", model.didForceClick)
-                metric("多指手势", "\(model.gesturesSeen.count)/3", !model.gesturesSeen.isEmpty)
+                metric(L("压力", "Pressure"), String(format: "%.2f", model.pressure), model.pressure > 0)
+                metric("Force Touch", model.didForceClick ? L("已触发", "Triggered") : L("未触发", "Not yet"), model.didForceClick)
+                metric(L("多指手势", "Multi-finger gestures"), "\(model.gesturesSeen.count)/3", !model.gesturesSeen.isEmpty)
                 Spacer()
-                Button("清除") { model.reset() }.buttonStyle(.bordered)
+                Button(L("清除", "Clear")) { model.reset() }.buttonStyle(.bordered)
             }
 
             DS.Divider()
 
             HStack(spacing: DS.Spacing.md) {
-                Text("测试结果：").font(DS.Font.body).foregroundStyle(.secondary)
-                Button("跟手 / 手势 / 压感都正常") {
-                    onComplete(CheckResult(id: "trackpad", title: "触控板", status: .pass,
-                        summary: "轨迹跟手、多指手势与压感均正常",
-                        rawDetails: ["轨迹点": "\(model.trail.count)",
-                                     "识别到的手势": model.gesturesSeen.sorted().joined(separator: ", "),
-                                     "Force Touch": model.didForceClick ? "已触发" : "未触发"]))
+                Text(L("测试结果：", "Result:")).font(DS.Font.body).foregroundStyle(.secondary)
+                Button(L("跟手 / 手势 / 压感都正常", "Tracking, Gestures & Pressure OK")) {
+                    onComplete(CheckResult(id: "trackpad", title: L("触控板", "Trackpad"), status: .pass,
+                        summary: L("轨迹跟手、多指手势与压感均正常", "Tracking, multi-finger gestures and pressure all work"),
+                        rawDetails: [L("轨迹点", "Track points"): "\(model.trail.count)",
+                                     L("识别到的手势", "Gestures detected"): model.gesturesSeen.sorted().joined(separator: ", "),
+                                     "Force Touch": model.didForceClick ? L("已触发", "Triggered") : L("未触发", "Not triggered")]))
                 }
                 .buttonStyle(.borderedProminent)
-                Button("有异常") {
-                    onComplete(CheckResult(id: "trackpad", title: "触控板", status: .warning,
-                        summary: "用户反馈触控板存在异常，建议进一步检查"))
+                Button(L("有异常", "Something's Wrong")) {
+                    onComplete(CheckResult(id: "trackpad", title: L("触控板", "Trackpad"), status: .warning,
+                        summary: L("用户反馈触控板存在异常，建议进一步检查", "User reported a trackpad problem; worth a closer look")))
                 }
                 .buttonStyle(.bordered)
             }
         }
         .padding(DS.Spacing.xl)
-        .checkPane("触控板")
+        .checkPane(L("触控板", "Trackpad"))
     }
 
     private var canvas: some View {
@@ -128,7 +129,7 @@ struct TrackpadCheckView: View {
             }
             .allowsHitTesting(false)
             if model.trail.isEmpty {
-                Text("在此区域移动手指").font(DS.Font.body).foregroundStyle(.tertiary)
+                Text(L("在此区域移动手指", "Move your finger here")).font(DS.Font.body).foregroundStyle(.tertiary)
             }
             // 压力可视化圆环
             if model.pressure > 0 {

@@ -18,9 +18,10 @@ enum ShellRunner {
         } catch {
             return ""
         }
-        process.waitUntilExit()
-
+        // 先读完再等退出：输出超过管道缓冲（64KB，如 system_profiler -json）时，
+        // 先 waitUntilExit 会让子进程卡在写管道上，双方互等死锁。
         let data = stdout.fileHandleForReading.readDataToEndOfFile()
+        process.waitUntilExit()
         return String(data: data, encoding: .utf8) ?? ""
     }
 

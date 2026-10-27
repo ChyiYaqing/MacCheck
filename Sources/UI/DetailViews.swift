@@ -13,12 +13,12 @@ struct DetailRouter: View {
             SpecsView()
         case .keyboard:
             FullscreenLaunchPane(item: .keyboard, test: .keyboard,
-                icon: "keyboard.fill", title: "键盘测试",
-                subtitle: "全屏逐键点亮，按下的键即刻高亮，自动识别失灵与卡键。")
+                icon: "keyboard.fill", title: L("键盘测试", "Keyboard Test"),
+                subtitle: L("全屏逐键点亮，按下的键即刻高亮，自动识别失灵与卡键。", "Full-screen key map: every key lights up as you press it, so dead or stuck keys stand out."))
         case .screen:
             FullscreenLaunchPane(item: .screen, test: .screen,
-                icon: "display", title: "屏幕测试",
-                subtitle: "纯色、灰阶、棋盘格全套画面轮播，用于查找坏点、亮点、色带与漏光。")
+                icon: "display", title: L("屏幕测试", "Display Test"),
+                subtitle: L("纯色、灰阶、棋盘格全套画面轮播，用于查找坏点、亮点、色带与漏光。", "Cycles through solid colors, grayscale and checkerboard patterns to reveal dead pixels, bright spots, banding and backlight bleed."))
         case .audio:
             AudioCheckView { model.recordTest($0) }
         case .microphone:
@@ -60,27 +60,27 @@ struct SpecsView: View {
                     systemCard(p)
                     warrantyCard(p)
                 } else {
-                    ProgressView("正在读取硬件规格…")
+                    ProgressView(L("正在读取硬件规格…", "Reading hardware specs…"))
                 }
             }
             .padding(DS.Spacing.xl)
             .frame(maxWidth: 720)
             .frame(maxWidth: .infinity, alignment: .center)
         }
-        .navigationTitle("硬件规格")
+        .navigationTitle(L("硬件规格", "Specs"))
     }
 
     // 基础信息
     private func basicInfoCard(_ p: DeviceProfile) -> some View {
         Card {
-            cardHeader(icon: "laptopcomputer", title: "基础信息")
+            cardHeader(icon: "laptopcomputer", title: L("基础信息", "Basics"))
             KeyValueList {
-                KVRow(icon: "macbook", key: "机型", value: p.marketingName)
-                KVRow(icon: "barcode", key: "序列号", value: p.serialNumber, mono: true, copyable: true)
-                KVRow(icon: "tag", key: "型号标识", value: p.modelIdentifier, mono: true)
-                KVRow(icon: "cpu", key: "芯片", value: p.chip)
-                KVRow(icon: "memorychip", key: "内存", value: p.memory)
-                KVRow(icon: "square.stack.3d.up", key: "架构", value: p.architecture, last: true)
+                KVRow(icon: "macbook", key: L("机型", "Model"), value: p.marketingName)
+                KVRow(icon: "barcode", key: L("序列号", "Serial number"), value: p.serialNumber, mono: true, copyable: true)
+                KVRow(icon: "tag", key: L("型号标识", "Model identifier"), value: p.modelIdentifier, mono: true)
+                KVRow(icon: "cpu", key: L("芯片", "Chip"), value: p.chip)
+                KVRow(icon: "memorychip", key: L("内存", "Memory"), value: p.memory)
+                KVRow(icon: "square.stack.3d.up", key: L("架构", "Architecture"), value: p.architecture, last: true)
             }
         }
     }
@@ -88,9 +88,9 @@ struct SpecsView: View {
     // 系统
     private func systemCard(_ p: DeviceProfile) -> some View {
         Card {
-            cardHeader(icon: "gearshape", title: "系统")
+            cardHeader(icon: "gearshape", title: L("系统", "System"))
             KeyValueList {
-                KVRow(icon: "apple.logo", key: "操作系统", value: p.macOSVersion, last: true)
+                KVRow(icon: "apple.logo", key: L("操作系统", "macOS"), value: p.macOSVersion, last: true)
             }
         }
     }
@@ -99,20 +99,20 @@ struct SpecsView: View {
     private func warrantyCard(_ p: DeviceProfile) -> some View {
         let lock = model.result(id: "management.activationLock")
         return Card {
-            cardHeader(icon: "checkmark.seal", title: "购买与保修")
+            cardHeader(icon: "checkmark.seal", title: L("购买与保修", "Purchase & Warranty"))
             KeyValueList {
-                KVRow(icon: "calendar", key: "机型年份", value: p.modelYear.isEmpty ? "未知" : p.modelYear)
-                KVRow(icon: "clock.arrow.circlepath", key: "预计机龄", value: ageText(p.modelYear))
-                KVRow(icon: "hammer", key: "生产日期", value: p.productionDate)
+                KVRow(icon: "calendar", key: L("机型年份", "Model year"), value: p.modelYear.isEmpty ? L("未知", "Unknown") : p.modelYear)
+                KVRow(icon: "clock.arrow.circlepath", key: L("预计机龄", "Estimated age"), value: ageText(p.modelYear))
+                KVRow(icon: "hammer", key: L("生产日期", "Manufacture date"), value: p.productionDate)
                 KVRow(icon: "lock.shield",
-                      key: "激活锁",
-                      value: lock?.summary ?? "见「安全与锁定」",
+                      key: L("激活锁", "Activation Lock"),
+                      value: lock?.summary ?? L("见「安全与锁定」", "See \"Security & Locks\""),
                       valueTint: lock?.status.tint,
                       last: true)
             }
 
             InlineNotice(icon: "info.circle", tint: .secondary,
-                text: "保修状态与激活/购买日期需向 Apple 服务器查询，本 App 不联网因此无法直接读取。点击下方按钮用序列号在官网查询。")
+                text: L("保修状态与激活/购买日期需向 Apple 服务器查询，本 App 不联网因此无法直接读取。点击下方按钮用序列号在官网查询。", "Warranty status and activation/purchase date live on Apple's servers. This app works offline, so it can't read them. Use the button below to look them up on Apple's site with the serial number."))
 
             HStack(spacing: DS.Spacing.md) {
                 Button {
@@ -120,7 +120,7 @@ struct SpecsView: View {
                         NSWorkspace.shared.open(url)
                     }
                 } label: {
-                    Label("在 Apple 官网查询保修", systemImage: "safari")
+                    Label(L("在 Apple 官网查询保修", "Check Warranty on Apple.com"), systemImage: "safari")
                 }
                 .buttonStyle(.borderedProminent)
 
@@ -128,7 +128,7 @@ struct SpecsView: View {
                     NSPasteboard.general.clearContents()
                     NSPasteboard.general.setString(p.serialNumber, forType: .string)
                 } label: {
-                    Label("复制序列号", systemImage: "doc.on.doc")
+                    Label(L("复制序列号", "Copy Serial Number"), systemImage: "doc.on.doc")
                 }
                 .buttonStyle(.bordered)
                 .disabled(p.serialNumber.isEmpty)
@@ -145,11 +145,11 @@ struct SpecsView: View {
     }
 
     private func ageText(_ yearStr: String) -> String {
-        guard let year = Int(yearStr) else { return "未知" }
+        guard let year = Int(yearStr) else { return L("未知", "Unknown") }
         let now = Calendar.current.component(.year, from: Date())
         let age = now - year
-        if age <= 0 { return "当年机型（约 1 年内）" }
-        return "约 \(age) 年"
+        if age <= 0 { return L("当年机型（约 1 年内）", "Current-year model (under ~1 year)") }
+        return L("约 \(age) 年", age == 1 ? "About 1 year" : "About \(age) years")
     }
 }
 
@@ -196,7 +196,7 @@ struct KVRow: View {
                             .font(.system(size: 11))
                     }
                     .buttonStyle(.borderless)
-                    .help("复制")
+                    .help(L("复制", "Copy"))
                 }
             }
             .padding(.vertical, DS.Spacing.sm)
@@ -217,9 +217,9 @@ struct CategoryDetailView: View {
                 let results = model.results(for: item)
                 if results.isEmpty {
                     if model.isScanning {
-                        ProgressView("正在检测…")
+                        ProgressView(L("正在检测…", "Checking…"))
                     } else {
-                        InlineNotice(icon: "minus.circle", tint: .secondary, text: "本机无此项数据或不适用。")
+                        InlineNotice(icon: "minus.circle", tint: .secondary, text: L("本机无此项数据或不适用。", "No data for this Mac, or not applicable."))
                     }
                 } else {
                     ForEach(results) { result in
@@ -303,7 +303,7 @@ struct FullscreenLaunchPane: View {
                                 .font(.system(size: 20)).foregroundStyle(result.status.tint)
                             VStack(alignment: .leading, spacing: 2) {
                                 HStack(spacing: DS.Spacing.sm) {
-                                    Text("上次结果").font(DS.Font.bodyEmphasis)
+                                    Text(L("上次结果", "Last result")).font(DS.Font.bodyEmphasis)
                                     StatusPill(status: result.status)
                                 }
                                 Text(result.summary).font(DS.Font.body).foregroundStyle(.secondary)
@@ -316,7 +316,7 @@ struct FullscreenLaunchPane: View {
                 Button {
                     model.fullscreenTest = test
                 } label: {
-                    Label(model.result(id: item.resultIDs.first ?? "") == nil ? "开始测试" : "重新测试",
+                    Label(model.result(id: item.resultIDs.first ?? "") == nil ? L("开始测试", "Start Test") : L("重新测试", "Test Again"),
                           systemImage: "play.fill")
                         .frame(minWidth: 160)
                 }
@@ -324,7 +324,7 @@ struct FullscreenLaunchPane: View {
                 .controlSize(.large)
 
                 InlineNotice(icon: "info.circle", tint: .secondary,
-                    text: "测试将进入全屏。键盘测试期间长按 esc 键、或按 Cmd+Q 可随时安全退出。")
+                    text: L("测试将进入全屏。键盘测试期间长按 esc 键、或按 Cmd+Q 可随时安全退出。", "The test runs full screen. During the keyboard test, hold esc or press Cmd+Q to exit safely at any time."))
             }
             .padding(DS.Spacing.xl)
             .frame(maxWidth: 720)

@@ -1,13 +1,15 @@
 # MacCheck 测试清单
 
+**中文** | [English](TESTING.en.md)
+
 本文档用于发布前自测和门店验机流程复核。自动检测可以通过构建和 App 启动完成，交互测试需要真实 Mac 硬件配合。
 
 ## 发布前基础验证
 
 ```bash
-xcodebuild -project MacCheck.xcodeproj -scheme MacCheck -configuration Release -derivedDataPath build_release CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=NO
+xcodebuild -project MacCheck.xcodeproj -scheme MacCheck -configuration Release -destination 'generic/platform=macOS' -derivedDataPath build_release CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=NO
 ./scripts/build_and_notarize.sh
-hdiutil verify ~/Desktop/MacCheck-1.2.dmg
+hdiutil verify ~/Desktop/MacCheck-1.3.dmg
 ```
 
 验证项：

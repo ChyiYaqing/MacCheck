@@ -18,7 +18,10 @@ struct ScreenCheckView: View {
         }
         .focusable()
         .focused($isFocused)
-        .onAppear { isFocused = true }
+        .onAppear {
+            isFocused = true
+            NSCursor.setHiddenUntilMouseMoves(true) // 指针也会挡住坏点
+        }
         .onKeyPress(.space) { model.advance(); return .handled }
         .onKeyPress(.rightArrow) { model.advance(); return .handled }
         .onKeyPress(.escape) { finish(exitedEarly: !model.isLastStage); return .handled }
@@ -48,12 +51,13 @@ struct ScreenCheckView: View {
         VStack(spacing: 10) {
             Text(model.currentStage.title)
                 .font(.system(size: 16, weight: .semibold))
-            Text("第 \(model.currentIndex + 1) / \(model.stages.count) 项 · 点按屏幕或按空格切换下一项 · 按 F 标记异常 · Esc 结束")
+            Text(L("第 \(model.currentIndex + 1) / \(model.stages.count) 项 · 点按屏幕或按空格切换下一项 · 按 F 标记异常 · Esc 结束",
+                   "\(model.currentIndex + 1) of \(model.stages.count) · Click or press Space for next · Press F to flag a problem · Esc to finish"))
                 .font(.system(size: 12))
                 .opacity(0.75)
             HStack(spacing: 12) {
-                Button("标记此画面异常") { model.flagCurrent() }
-                Button(model.isLastStage ? "完成测试" : "下一项") {
+                Button(L("标记此画面异常", "Flag a Problem Here")) { model.flagCurrent() }
+                Button(model.isLastStage ? L("完成测试", "Finish Test") : L("下一项", "Next")) {
                     if model.isLastStage {
                         finish(exitedEarly: false)
                     } else {

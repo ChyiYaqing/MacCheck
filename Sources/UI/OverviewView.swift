@@ -17,27 +17,27 @@ struct OverviewView: View {
             .frame(maxWidth: 780)
             .frame(maxWidth: .infinity, alignment: .center)
         }
-        .navigationTitle("概览")
+        .navigationTitle(L("概览", "Overview"))
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {
                     model.saveCurrentToHistory()
                 } label: {
-                    Label("保存到历史", systemImage: "square.and.arrow.down")
+                    Label(L("保存到历史", "Save to History"), systemImage: "square.and.arrow.down")
                 }
                 .disabled(model.isScanning || model.profile == nil)
-                .help("保存本次检测快照，便于日后对比（如电池衰减）")
+                .help(L("保存本次检测快照，便于日后对比（如电池衰减）", "Save a snapshot of this check to compare later (e.g. battery wear)"))
             }
             ToolbarItem(placement: .primaryAction) {
                 Menu {
                     Button {
                         ReportExporter.export(profile: model.profile, report: model.report, format: .png)
-                    } label: { Label("导出为长图 (PNG)", systemImage: "photo") }
+                    } label: { Label(L("导出为长图 (PNG)", "Export as Long Image (PNG)"), systemImage: "photo") }
                     Button {
                         ReportExporter.export(profile: model.profile, report: model.report, format: .pdf)
-                    } label: { Label("导出为 PDF", systemImage: "doc.richtext") }
+                    } label: { Label(L("导出为 PDF", "Export as PDF"), systemImage: "doc.richtext") }
                 } label: {
-                    Label("导出报告", systemImage: "square.and.arrow.up")
+                    Label(L("导出报告", "Export Report"), systemImage: "square.and.arrow.up")
                 }
                 .disabled(model.isScanning)
             }
@@ -54,17 +54,17 @@ struct OverviewView: View {
                     .foregroundStyle(.tint)
                     .frame(width: 64)
                 VStack(alignment: .leading, spacing: DS.Spacing.sm) {
-                    Text(model.profile?.marketingName ?? "正在识别机型…")
+                    Text(model.profile?.marketingName ?? L("正在识别机型…", "Identifying model…"))
                         .font(DS.Font.largeTitle)
                         .fixedSize(horizontal: false, vertical: true)
                     if let p = model.profile {
                         Text("\(p.chip) · \(p.memory) · \(p.macOSVersion)")
                             .font(DS.Font.body).foregroundStyle(.secondary)
                         HStack(spacing: DS.Spacing.sm) {
-                            metaChip(icon: "barcode", text: p.serialNumber.isEmpty ? "序列号未知" : p.serialNumber)
+                            metaChip(icon: "barcode", text: p.serialNumber.isEmpty ? L("序列号未知", "Serial number unknown") : p.serialNumber)
                             metaChip(icon: "cpu", text: p.architecture)
                             if !p.modelYear.isEmpty {
-                                metaChip(icon: "calendar", text: "\(p.modelYear) 年款")
+                                metaChip(icon: "calendar", text: L("\(p.modelYear) 年款", "\(p.modelYear) model"))
                             }
                         }
                     }
@@ -93,7 +93,7 @@ struct OverviewView: View {
                 .font(.system(size: 40, weight: .heavy))
                 .foregroundStyle(scoreColor)
                 .contentTransition(.numericText())
-            Text("综合评分").font(DS.Font.caption).foregroundStyle(.secondary)
+            Text(L("综合评分", "Overall score")).font(DS.Font.caption).foregroundStyle(.secondary)
         }
     }
 
@@ -115,7 +115,7 @@ struct OverviewView: View {
 
     private var redFlagSection: some View {
         VStack(alignment: .leading, spacing: DS.Spacing.md) {
-            Label("重大问题 · 请优先阅读", systemImage: "exclamationmark.octagon.fill")
+            Label(L("重大问题 · 请优先阅读", "Major Issues · Read First"), systemImage: "exclamationmark.octagon.fill")
                 .font(DS.Font.title).foregroundStyle(.red)
             ForEach(model.report.redFlags) { flag in
                 HStack(alignment: .top, spacing: DS.Spacing.sm) {
@@ -136,7 +136,7 @@ struct OverviewView: View {
 
     private var categorySummary: some View {
         VStack(alignment: .leading, spacing: DS.Spacing.sm) {
-            SectionLabel(text: "系统检测")
+            SectionLabel(text: L("系统检测", "System Checks"))
             Card {
                 ForEach(Array(SidebarItem.autoCategories.enumerated()), id: \.element) { index, item in
                     summaryRow(item)
@@ -149,9 +149,9 @@ struct OverviewView: View {
     private var testSummary: some View {
         VStack(alignment: .leading, spacing: DS.Spacing.sm) {
             HStack {
-                SectionLabel(text: "硬件测试")
+                SectionLabel(text: L("硬件测试", "Hardware Tests"))
                 Spacer()
-                Text("\(model.completedTestCount) / \(SidebarItem.interactiveTests.count) 已测试")
+                Text(L("\(model.completedTestCount) / \(SidebarItem.interactiveTests.count) 已测试", "\(model.completedTestCount) of \(SidebarItem.interactiveTests.count) tested"))
                     .font(DS.Font.caption).foregroundStyle(.secondary)
             }
             Card {
@@ -177,7 +177,7 @@ struct OverviewView: View {
                         .lineLimit(1).truncationMode(.tail).frame(maxWidth: 320, alignment: .trailing)
                     StatusDot(status: status)
                 } else {
-                    Text(item.isInteractive ? "未测试" : "—")
+                    Text(item.isInteractive ? L("未测试", "Not tested") : "—")
                         .font(DS.Font.caption).foregroundStyle(.tertiary)
                     Image(systemName: "chevron.right").font(.system(size: 10)).foregroundStyle(.tertiary)
                 }
@@ -192,8 +192,8 @@ struct OverviewView: View {
     private var footer: some View {
         VStack(alignment: .leading, spacing: DS.Spacing.xs) {
             DS.Divider()
-            Text("检测时间：\(model.generatedAt.formatted(date: .abbreviated, time: .shortened)) · MacCheck v\(model.report.appVersion)")
-            Text("本 App 完全本地运行，不联网、不上传任何数据。检测结果仅供参考，不构成质保。")
+            Text(L("检测时间：\(model.generatedAt.formatted(date: .abbreviated, time: .shortened)) · MacCheck v\(model.report.appVersion)", "Checked: \(model.generatedAt.formatted(date: .abbreviated, time: .shortened)) · MacCheck v\(model.report.appVersion)"))
+            Text(L("本 App 完全本地运行，不联网、不上传任何数据。检测结果仅供参考，不构成质保。", "This app runs entirely on your Mac. It never goes online or uploads anything. Results are for reference only and are not a warranty."))
         }
         .font(DS.Font.caption).foregroundStyle(.secondary)
         .padding(.top, DS.Spacing.sm)

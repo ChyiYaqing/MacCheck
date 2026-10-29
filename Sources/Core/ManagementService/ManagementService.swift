@@ -91,10 +91,107 @@ enum ManagementService {
 
     // MARK: - Apple ID / 查找我的 Mac
 
-    private static func isICloudAccountSignedIn() -> Bool {
-        let output = ShellRunner.run("/usr/bin/defaults", ["read", "MobileMeAccounts", "Accounts"])
-        return !output.isEmpty && output.contains("AccountID")
+    /// nil 表示缺少有效证据或来源冲突；不能当作已经退出登录。
+    static func iCloudAccountSignedIn(legacy: [String: Any]?, cache: [String: Any]?) -> Bool? {
+        let accounts = legacy?["Accounts"] as? [[String: Any]]
+        let legacyState: Bool? = accounts.flatMap { accounts in
+            if accounts.isEmpty { return false }
+            return accounts.contains {
+                !(($0["AccountID"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+            } ? true : nil
+        }
+        let cacheState = cache?["AAIsAccountSignedIn"] as? Bool
+        if let legacyState, let cacheState, legacyState != cacheState { return nil }
+        return cacheState ?? legacyState
     }
+
+    struct ICloudAccountInfo {
+        let signedIn: Bool?
+        let accountID: String?
+        let displayName: String?
+        var needsFullDiskAccess = false
+    }
+
+    static func iCloudAccountInfo(
+        legacy: [String: Any]?, cache: [String: Any]?, databaseUsernames: [String]
+    ) -> ICloudAccountInfo {
+        let signedIn = iCloudAccountSignedIn(legacy: legacy, cache: cache)
+        // 退出登录后的缓存可能仍有个人资料，状态不明确时也不展示。
+        guard signedIn == true else {
+            return ICloudAccountInfo(signedIn: signedIn, accountID: nil, displayName: nil)
+        }
+        func nonempty(_ value: Any?) -> String? {
+            guard let text = value as? String else { return nil }
+            let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+            return trimmed.isEmpty ? nil : trimmed
+        }
+        let accounts = (legacy?["Accounts"] as? [[String: Any]] ?? []).filter {
+            nonempty($0["AccountID"]) != nil && ($0["LoggedIn"] as? Bool) != false
+        }
+        let identifiers = Set(accounts.compactMap { nonempty($0["AccountID"]) }
+            + databaseUsernames.compactMap { nonempty($0) })
+        let accountID = identifiers.count == 1 ? identifiers.first : nil
+        let legacyName = accounts.first { nonempty($0["AccountID"]) == accountID }
+            .flatMap { nonempty($0["DisplayName"]) }
+        return ICloudAccountInfo(
+            signedIn: signedIn, accountID: accountID,
+            displayName: nonempty(cache?["AAAccountFullName"]) ?? legacyName
+        )
+    }
+
+    /// 仅查询当前用户的主 Apple 账户，数据库内容不参与“已退出”判断。
+    /// Schema reference: https://github.com/kolide/launcher/issues/1748
+    static func iCloudAccountUsernames(at databaseURL: URL) -> [String] {
+        iCloudAccountDatabase(at: databaseURL).usernames
+    }
+
+    static func parseICloudAccountDatabaseOutput(_ output: String) -> (usernames: [String], permissionDenied: Bool) {
+        if let rows = (try? JSONSerialization.jsonObject(with: Data(output.utf8))) as? [[String: Any]] {
+            return (rows.compactMap { $0["username"] as? String }, false)
+        }
+        let error = output.lowercased()
+        return ([], ["authorization denied", "not authorized", "permission denied", "operation not permitted"]
+            .contains { error.contains($0) })
+    }
+
+    private static func iCloudAccountDatabase(at databaseURL: URL) -> (usernames: [String], permissionDenied: Bool) {
+        let query = """
+            SELECT DISTINCT a.ZUSERNAME AS username FROM ZACCOUNT a
+            JOIN ZACCOUNTTYPE t ON a.ZACCOUNTTYPE = t.Z_PK
+            WHERE t.ZIDENTIFIER = 'com.apple.account.AppleAccount' AND a.ZACTIVE = 1
+            """
+        // GUI 应用的 TCC 权限与终端不同；保留错误类型，避免吞掉授权失败。
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/sqlite3")
+        process.arguments = ["-readonly", "-json", databaseURL.path, query]
+        let pipe = Pipe()
+        process.standardOutput = pipe
+        process.standardError = pipe
+        do { try process.run() } catch { return ([], false) }
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        process.waitUntilExit()
+        return parseICloudAccountDatabaseOutput(String(decoding: data, as: UTF8.self))
+    }
+
+    static func iCloudAccountInfo() -> ICloudAccountInfo {
+        func preferences(_ domain: String) -> [String: Any]? {
+            let output = ShellRunner.run("/usr/bin/defaults", ["export", domain, "-"])
+            return (try? PropertyListSerialization.propertyList(
+                from: Data(output.utf8), options: [], format: nil
+            )) as? [String: Any]
+        }
+        let database = iCloudAccountDatabase(at: FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent("Library/Accounts/Accounts4.sqlite"))
+        var info = iCloudAccountInfo(
+            legacy: preferences("MobileMeAccounts"),
+            cache: preferences("com.apple.appleaccount.informationcache"),
+            databaseUsernames: database.usernames
+        )
+        info.needsFullDiskAccess = info.signedIn == true && info.accountID == nil && database.permissionDenied
+        return info
+    }
+
+    static func iCloudAccountSignedIn() -> Bool? { iCloudAccountInfo().signedIn }
 
     // MARK: - 激活锁
 
@@ -184,15 +281,29 @@ enum ManagementService {
         }
 
         // Apple ID
-        let signedIn = isICloudAccountSignedIn()
+        let account = iCloudAccountInfo()
+        let signedIn = account.signedIn
+        var accountDetails = [L("iCloud 账户", "iCloud account"): signedIn.map { $0 ? L("已登录", "Signed in") : L("未登录", "Not signed in") } ?? L("无法确认", "Unknown")]
+        if signedIn == true {
+            accountDetails["Apple ID"] = account.accountID ?? L("未能读取，请在系统设置中核对", "Unavailable; check System Settings")
+            accountDetails[L("账户姓名", "Account name")] = account.displayName ?? L("未能读取", "Unavailable")
+            if account.needsFullDiskAccess {
+                accountDetails["Apple ID"] = L("读取被 macOS 隐私权限阻止", "Blocked by macOS privacy permissions")
+                accountDetails[L("读取账号所需权限", "Account access permission")] = L(
+                    "系统设置 > 隐私与安全性 > 完整磁盘访问权限，添加并启用 MacCheck，然后退出并重新打开应用",
+                    "Add and enable MacCheck in System Settings > Privacy & Security > Full Disk Access, then quit and reopen the app"
+                )
+            }
+        }
         results.append(CheckResult(
             id: "management.appleID",
             title: L("Apple ID 登录状态", "Apple ID Sign-in"),
-            status: signedIn ? .warning : .pass,
-            summary: signedIn ? L("检测到仍有 Apple ID 登录在本机，交易前必须确认已退出", "An Apple ID is still signed in on this Mac; make sure it’s signed out before buying") : L("未检测到已登录的 Apple ID", "No Apple ID is signed in"),
-            rawDetails: [L("iCloud 账户", "iCloud account"): signedIn ? L("已登录", "Signed in") : L("未登录", "Not signed in")],
-            isRedFlagHeadline: signedIn
-                ? L("⚠️ 本机仍登录着一个 Apple ID。如果这不是你自己的账号，说明原机主没有退出登录——过户前必须让对方在「系统设置 > 用户」里退出 Apple ID，否则你无法正常使用 iCloud、App Store 等服务。", "⚠️ An Apple ID is still signed in on this Mac. If it isn’t yours, the previous owner never signed out. Have them sign out of their Apple ID in System Settings before the handover, or you won’t be able to use iCloud, the App Store and other services properly.")
+            status: signedIn == false ? .pass : .warning,
+            summary: signedIn.map { $0 ? L("检测到仍有 Apple ID 登录在本机，交易前必须确认已退出", "An Apple ID is still signed in on this Mac; make sure it’s signed out before buying") : L("未检测到已登录的 Apple ID", "No Apple ID is signed in") }
+                ?? L("无法确认 Apple ID 登录状态，请在「系统设置 > Apple 账户」中核对", "Couldn’t confirm Apple ID sign-in; check System Settings > Apple Account"),
+            rawDetails: accountDetails,
+            isRedFlagHeadline: signedIn == true
+                ? L("⚠️ 本机仍登录着一个 Apple ID。如果这不是你自己的账号，说明原机主没有退出登录——过户前必须让对方在「系统设置 > Apple 账户」里退出 Apple ID，否则你无法正常使用 iCloud、App Store 等服务。", "⚠️ An Apple ID is still signed in on this Mac. If it isn’t yours, the previous owner never signed out. Have them sign out of their Apple ID in System Settings before the handover, or you won’t be able to use iCloud, the App Store and other services properly.")
                 : nil
         ))
 

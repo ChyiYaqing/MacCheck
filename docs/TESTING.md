@@ -22,6 +22,12 @@ hdiutil verify ~/Desktop/MacCheck-1.3.dmg
 
 ## 自动检测项目
 
+账户检测回归测试：`bash scripts/test_management.sh`。在已登录 Apple 账户的开发机上，可加 `--live` 验证实际登录状态、账号及姓名的读取（测试不输出个人资料）。
+
+Apple ID 详情读取兼容旧版 `MobileMeAccounts`，并结合当前用户的账户状态缓存和只读 `Accounts4.sqlite` 查询。数据库联查方式参考 [Kolide 的公开方案](https://github.com/kolide/launcher/issues/1748)；仅选择 `com.apple.account.AppleAccount` 类型的活动账户，排除 App Store、邮件等其他账户。缺少读取权限或系统结构变化时，显示资料不可用；缓存并非在线认证结果，交易前仍需在系统设置核对。截图及导出报告会包含已读取的账号、姓名，分享前请脱敏。
+
+必须通过 Finder/Launch Services 启动新构建进行 GUI 验证；终端测试成功不代表 App 获得同样的 TCC 权限。若 GUI 显示“读取被 macOS 隐私权限阻止”，由用户决定是否在“系统设置 > 隐私与安全性 > 完整磁盘访问权限”添加并启用当前 MacCheck，授权后退出并重新打开。未授权时仍应显示姓名（若可读）和明确的权限提示，不能误报未登录。重新构建不会更新已经运行的进程，必须退出旧进程后再启动。
+
 | 模块 | 期望结果 |
 | --- | --- |
 | 硬件规格 | 显示机型、序列号、芯片、内存、架构、macOS 版本 |

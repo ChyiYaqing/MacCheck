@@ -146,6 +146,7 @@ struct InfoRow: View {
             Spacer(minLength: DS.Spacing.lg)
             Text(value).font(mono ? DS.Font.body.monospaced() : DS.Font.body)
                 .multilineTextAlignment(.trailing)
+                .fixedSize(horizontal: false, vertical: true)
                 .textSelection(.enabled)
         }
     }

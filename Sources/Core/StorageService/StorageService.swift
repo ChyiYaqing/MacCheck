@@ -1,7 +1,49 @@
 import Foundation
+import IOKit
 
 /// A3：存储/固态硬盘检测。读取 SSD 型号、容量、SMART 健康状态、TRIM，以及剩余可用空间。
 enum StorageService {
+
+    /// Match the selected SSD rather than borrowing chip details from another controller.
+    static func storageControllerCharacteristics(serial: String) -> [String: Any]? {
+        let serial = serial.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !serial.isEmpty else { return nil }
+        let matching = [kIOPropertyExistsMatchKey: "Controller Characteristics"] as CFDictionary
+        var iterator: io_iterator_t = 0
+        guard IOServiceGetMatchingServices(kIOMainPortDefault, matching, &iterator) == KERN_SUCCESS else {
+            return nil
+        }
+        defer { IOObjectRelease(iterator) }
+        while case let service = IOIteratorNext(iterator), service != 0 {
+            defer { IOObjectRelease(service) }
+            guard let characteristics = IORegistryEntryCreateCFProperty(
+                service, "Controller Characteristics" as CFString, kCFAllocatorDefault, 0
+            )?.takeRetainedValue() as? [String: Any],
+                  let identifier = characteristics["controller-unique-id"] as? String,
+                  identifier.trimmingCharacters(in: .whitespacesAndNewlines) == serial
+            else { continue }
+            return characteristics
+        }
+        return nil
+    }
+
+    /// The NAND marketing identifier is not the part number printed on the physical package.
+    /// Field reference: https://github.com/ThomasKaiser/Knowledge/blob/master/articles/Exploring_Apple_Silicon_on_MacBookAir10.md
+    static func storageChipDetails(characteristics: [String: Any]?) -> [String: String] {
+        func text(_ key: String) -> String? {
+            guard let value = characteristics?[key] as? String else { return nil }
+            let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines.union(.controlCharacters))
+            return trimmed.isEmpty ? nil : trimmed
+        }
+        var details = [
+            L("NAND 闪存厂家", "NAND manufacturer"): text("vendor-name") ?? L("未能读取", "Unavailable"),
+            L("NAND 型号标识", "NAND model identifier"): text("nand-marketing-name") ?? L("未能读取", "Unavailable"),
+        ]
+        if let chip = text("chip-id") {
+            details[L("存储控制器芯片", "Storage controller chip")] = chip
+        }
+        return details
+    }
 
     private static func nvmeDrives() -> [[String: Any]] {
         let output = ShellRunner.run("/usr/sbin/system_profiler", ["SPNVMeDataType", "-json"])
@@ -88,6 +130,8 @@ enum StorageService {
             L("TRIM 支持", "TRIM support"): trim.isEmpty ? L("未知", "Unknown") : trim,
             L("固件版本", "Firmware"): revision,
         ]
+        let controller = storageControllerCharacteristics(serial: (disk["device_serial"] as? String) ?? "")
+        details.merge(storageChipDetails(characteristics: controller)) { _, chipValue in chipValue }
         if let free = freeSpaceBytes() {
             details[L("可用空间", "Free space")] = gb(free)
         }

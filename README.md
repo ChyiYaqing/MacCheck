@@ -16,6 +16,7 @@ MacCheck 是一款面向二手 Mac 交易、门店验机和个人自检的 macOS
 - 键盘逐键点亮、屏幕纯色/灰阶/棋盘格、音频、麦克风、摄像头、Touch ID、触控板等交互测试
 - 硬盘读写测速、性能压测、接口逐口实测
 - AI 大模型可跑性建议，按本机内存估算本地模型适配度
+- iPhone / iPad 检测：USB 连接后读取型号、序列号/IMEI、销售渠道（零售/官翻/售后换机）、电池循环与健康度、激活与监管状态，并可导出报告；同时列出该 iPhone 配对的 Apple Watch（型号、watchOS 版本、序列号、销售渠道、当前电量）
 - 一键导出 PDF / PNG 长图报告，支持保存历史记录便于后续对比
 - 支持跟随系统、浅色、深色三种外观主题设置
 
@@ -27,6 +28,7 @@ MacCheck 是一款面向二手 Mac 交易、门店验机和个人自检的 macOS
 - Apple Silicon 或 Intel Mac
 - Xcode 16 或更高版本用于源码构建
 - 可选：`xcodegen`，用于根据 `project.yml` 重新生成 Xcode 工程
+- 可选：`brew install libimobiledevice`，用于 iPhone / iPad 检测（设备需解锁并点「信任此电脑」）
 
 ## 快速安装
 

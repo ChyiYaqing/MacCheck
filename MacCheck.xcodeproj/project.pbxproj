@@ -15,9 +15,12 @@
 		21B8CC61B1F663FE8D2ADA23 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607883521D19331A4FED816A /* Assets.xcassets */; };
 		21E0744BFD545A772DC15CBA /* PortLiveCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794B01149175A6B612F2BA64 /* PortLiveCheckView.swift */; };
 		25BE9C90A45ECC7E0210198F /* SecurityChipService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41433486C70265B1304E21B3 /* SecurityChipService.swift */; };
+		28025E3C1CA8E122DBD2C9C8 /* IOSDeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375752CBF458CAA24AEB2B19 /* IOSDeviceView.swift */; };
 		2B0A86621EE080C97126FFC1 /* PortService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1C4C43B2B6E8F02D660D17 /* PortService.swift */; };
 		30ED452BD40F093D90242A7F /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FAD45F67C273C6884678C90 /* DesignSystem.swift */; };
+		33A71125D2A7ED91283A6F53 /* WatchCompanionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5B9DBFC117827DC56F61EA /* WatchCompanionService.swift */; };
 		3506EE27CC5E7F702954CDBC /* AIModelAdvisor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EC4DD9F9B605558BE978B9 /* AIModelAdvisor.swift */; };
+		3C50CF89F71F68478DCC7717 /* MacCheckWatchHelper in Embed Dependencies */ = {isa = PBXBuildFile; fileRef = 2ACF2DA80F7DC6ED8E49AC58 /* MacCheckWatchHelper */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		40AB1557F676AD8B45196FB7 /* SerialDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A15C591745CDF8D0701A84 /* SerialDecoder.swift */; };
 		431036307D9EF8E0161D86DD /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB5DA5B7355C4FAD2AAA7E2 /* Localization.swift */; };
 		49AF24919D1A50CD0B4CD16A /* HardwareProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA77FD99DE4E15D8544E79AC /* HardwareProbe.swift */; };
@@ -34,12 +37,15 @@
 		68BE6016E05D97313AE9F174 /* ReportDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4CDD157461D07A863A2696 /* ReportDocumentView.swift */; };
 		68C462B7FB5B46275D67CEB6 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C891817E99096D4F76EF66 /* RootView.swift */; };
 		6B592690125FAEEABCFD4437 /* FullscreenPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4642E6E5D6C127506BF887 /* FullscreenPresenter.swift */; };
+		711D06F57C13B561768FC01E /* IOSDeviceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B20E228B6D18024B9C642B /* IOSDeviceService.swift */; };
 		75A437E3F8F8492155A79EFC /* DiskSpeedCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B577B9E0EFFA5F2A93B972D /* DiskSpeedCheckView.swift */; };
 		840BB4D4226BA40F52180C3B /* HistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B768D962B456FFB1BE68C9 /* HistoryStore.swift */; };
 		8AAFD72F1BEC7CAF9826046F /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3228FA565E2EAA5B62D04B81 /* AppModel.swift */; };
 		8AF68226FE9FBB07EB5D070D /* ReportExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80A74693350BA1F5EDB5BB3 /* ReportExporter.swift */; };
 		942409BF514E9217268750CE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 69B40B6BB51CCE8BF6980428 /* InfoPlist.strings */; };
+		9AB5C0D841761D0F57FB822D /* IOSDeviceNaming.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30FAF7F88D47359D6060C5EB /* IOSDeviceNaming.swift */; };
 		A0C73FAD5537EFF4DB99E416 /* TouchIDCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C12A906F503976B2C10563 /* TouchIDCheckView.swift */; };
+		A30754C1240ED0BF829EA38B /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3CFB81C5CF95E09DF04AEF /* main.swift */; };
 		A31F2841FDA260E688E0955C /* MacCheckApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8619617ED2FC14A2080367B /* MacCheckApp.swift */; };
 		B87A28D041AF475CEB291DF9 /* BatteryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5550AF2B16828BE4457028D0 /* BatteryService.swift */; };
 		BFEA86B8291019DA41CFF8DB /* TrackpadCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD251515F983FD31A3026BB7 /* TrackpadCheckView.swift */; };
@@ -53,6 +59,30 @@
 		FD6309847B9E86676BE40490 /* DetailViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDDCFFD415A9D8E78208E3B /* DetailViews.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		D873ABF1DB7EA631E949355B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 45FD97A7EB74F00B0FFD4928 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0B0F8351881B9B20FDFC1CA8;
+			remoteInfo = MacCheckWatchHelper;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		BACD1ABCFA08964D225D329B /* Embed Dependencies */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				3C50CF89F71F68478DCC7717 /* MacCheckWatchHelper in Embed Dependencies */,
+			);
+			name = "Embed Dependencies";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		00A15C591745CDF8D0701A84 /* SerialDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerialDecoder.swift; sourceTree = "<group>"; };
 		0813451F607E24EB9DE914E0 /* NVMeSMARTReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NVMeSMARTReader.swift; sourceTree = "<group>"; };
@@ -60,12 +90,17 @@
 		0F1B7973186D22F74389C1EF /* StorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageService.swift; sourceTree = "<group>"; };
 		10EC4DD9F9B605558BE978B9 /* AIModelAdvisor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIModelAdvisor.swift; sourceTree = "<group>"; };
 		13EEBB1CD8C2B7BCE7EE53E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		1A3CFB81C5CF95E09DF04AEF /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		1E4CDD157461D07A863A2696 /* ReportDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportDocumentView.swift; sourceTree = "<group>"; };
 		1FD9082F5C8F6225B946118D /* MicrophoneCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneCheckView.swift; sourceTree = "<group>"; };
 		2A0D4EC52226B5AE07DBD5E4 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		2ACF2DA80F7DC6ED8E49AC58 /* MacCheckWatchHelper */ = {isa = PBXFileReference; includeInIndex = 0; path = MacCheckWatchHelper; sourceTree = BUILT_PRODUCTS_DIR; };
+		30FAF7F88D47359D6060C5EB /* IOSDeviceNaming.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSDeviceNaming.swift; sourceTree = "<group>"; };
 		3228FA565E2EAA5B62D04B81 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		371DF27B70402D1DF4814A49 /* ReportModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportModel.swift; sourceTree = "<group>"; };
+		375752CBF458CAA24AEB2B19 /* IOSDeviceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSDeviceView.swift; sourceTree = "<group>"; };
 		37D249A27EF368B15A200974 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		38B20E228B6D18024B9C642B /* IOSDeviceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSDeviceService.swift; sourceTree = "<group>"; };
 		3F1C4C43B2B6E8F02D660D17 /* PortService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortService.swift; sourceTree = "<group>"; };
 		4115245B7958EDEA0E476CDE /* ScreenCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenCheckView.swift; sourceTree = "<group>"; };
 		41433486C70265B1304E21B3 /* SecurityChipService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityChipService.swift; sourceTree = "<group>"; };
@@ -92,6 +127,7 @@
 		B2C891817E99096D4F76EF66 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		B325D3D0BF7EE8F9C30F4539 /* ShellRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellRunner.swift; sourceTree = "<group>"; };
 		B6B768D962B456FFB1BE68C9 /* HistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryStore.swift; sourceTree = "<group>"; };
+		BF5B9DBFC117827DC56F61EA /* WatchCompanionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchCompanionService.swift; sourceTree = "<group>"; };
 		C9C12A906F503976B2C10563 /* TouchIDCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchIDCheckView.swift; sourceTree = "<group>"; };
 		CD251515F983FD31A3026BB7 /* TrackpadCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackpadCheckView.swift; sourceTree = "<group>"; };
 		CDD03E371F36146A7A8D3A37 /* MacCheck-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MacCheck-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -110,8 +146,17 @@
 			isa = PBXGroup;
 			children = (
 				4B79BD2F5FBBB9BA2F91F3F2 /* MacCheck.app */,
+				2ACF2DA80F7DC6ED8E49AC58 /* MacCheckWatchHelper */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		12041E53DB2DFD6386E11F88 /* WatchHelper */ = {
+			isa = PBXGroup;
+			children = (
+				1A3CFB81C5CF95E09DF04AEF /* main.swift */,
+			);
+			path = WatchHelper;
 			sourceTree = "<group>";
 		};
 		1D79078294396AEEFBEA497B /* PortLiveCheck */ = {
@@ -175,6 +220,14 @@
 			path = MicrophoneCheck;
 			sourceTree = "<group>";
 		};
+		6A9E8D974C6AACC58536C921 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				12041E53DB2DFD6386E11F88 /* WatchHelper */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		731F45BC5747CBBD690A6E26 /* DiskSpeedCheck */ = {
 			isa = PBXGroup;
 			children = (
@@ -211,6 +264,7 @@
 		7BADB40D2D87B33B42CBB095 = {
 			isa = PBXGroup;
 			children = (
+				6A9E8D974C6AACC58536C921 /* Helpers */,
 				B4B5FAF595334A4EB74924AD /* Sources */,
 				04BECE7B7FCFC94E426E8F98 /* Products */,
 			);
@@ -245,6 +299,16 @@
 				D8662A24F23FA934C6FCA255 /* SMCService.swift */,
 			);
 			path = SMCService;
+			sourceTree = "<group>";
+		};
+		9D9A4A36DB07A7D019454E34 /* IOSDeviceService */ = {
+			isa = PBXGroup;
+			children = (
+				30FAF7F88D47359D6060C5EB /* IOSDeviceNaming.swift */,
+				38B20E228B6D18024B9C642B /* IOSDeviceService.swift */,
+				BF5B9DBFC117827DC56F61EA /* WatchCompanionService.swift */,
+			);
+			path = IOSDeviceService;
 			sourceTree = "<group>";
 		};
 		9DD514838AEA1D0F39E916B6 /* ScreenCheck */ = {
@@ -318,6 +382,7 @@
 				4BDDCFFD415A9D8E78208E3B /* DetailViews.swift */,
 				8D4642E6E5D6C127506BF887 /* FullscreenPresenter.swift */,
 				0DF7DC1FCD3E942D729DAA93 /* HistoryView.swift */,
+				375752CBF458CAA24AEB2B19 /* IOSDeviceView.swift */,
 				6AA4A79CB0FC9BF78491623B /* OverviewView.swift */,
 				B2C891817E99096D4F76EF66 /* RootView.swift */,
 				37D249A27EF368B15A200974 /* SettingsView.swift */,
@@ -334,6 +399,7 @@
 				D68BA5E89EB9180EB7CDC84A /* AIAdvisor */,
 				754DF2CE8D52FEF4F00F3839 /* BatteryService */,
 				9CFDBB3470C433A314F1DBF3 /* HardwareProbe */,
+				9D9A4A36DB07A7D019454E34 /* IOSDeviceService */,
 				F0FC66D25F9987B66737D349 /* ManagementService */,
 				A2377E33ABE3E2ADE9911EFC /* NetworkService */,
 				35E05A85554289FEB077C5AF /* PortService */,
@@ -363,16 +429,35 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		0B0F8351881B9B20FDFC1CA8 /* MacCheckWatchHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B2F8C8D4056E138D1892205C /* Build configuration list for PBXNativeTarget "MacCheckWatchHelper" */;
+			buildPhases = (
+				C6ADCFFE64BD674A18CC0AD4 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MacCheckWatchHelper;
+			packageProductDependencies = (
+			);
+			productName = MacCheckWatchHelper;
+			productReference = 2ACF2DA80F7DC6ED8E49AC58 /* MacCheckWatchHelper */;
+			productType = "com.apple.product-type.tool";
+		};
 		2D060735F26C7F9D8D3F7880 /* MacCheck */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B7BE983942B67216E25E8542 /* Build configuration list for PBXNativeTarget "MacCheck" */;
 			buildPhases = (
 				199C85C740A8A6049FEAAA90 /* Sources */,
 				A622234FD67CC8D759119215 /* Resources */,
+				BACD1ABCFA08964D225D329B /* Embed Dependencies */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				0E51F0289E4BE266F2907CB0 /* PBXTargetDependency */,
 			);
 			name = MacCheck;
 			packageProductDependencies = (
@@ -390,6 +475,9 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					0B0F8351881B9B20FDFC1CA8 = {
+						ProvisioningStyle = Automatic;
+					};
 					2D060735F26C7F9D8D3F7880 = {
 						ProvisioningStyle = Automatic;
 					};
@@ -411,6 +499,7 @@
 			projectRoot = "";
 			targets = (
 				2D060735F26C7F9D8D3F7880 /* MacCheck */,
+				0B0F8351881B9B20FDFC1CA8 /* MacCheckWatchHelper */,
 			);
 		};
 /* End PBXProject section */
@@ -446,6 +535,9 @@
 				49AF24919D1A50CD0B4CD16A /* HardwareProbe.swift in Sources */,
 				840BB4D4226BA40F52180C3B /* HistoryStore.swift in Sources */,
 				FC487407FA904A58A4047AAC /* HistoryView.swift in Sources */,
+				9AB5C0D841761D0F57FB822D /* IOSDeviceNaming.swift in Sources */,
+				711D06F57C13B561768FC01E /* IOSDeviceService.swift in Sources */,
+				28025E3C1CA8E122DBD2C9C8 /* IOSDeviceView.swift in Sources */,
 				666CDCCEAF224418917B13AB /* KeyboardCheckView.swift in Sources */,
 				1316207251B430AA38B196FE /* KeyboardLayout.swift in Sources */,
 				54BCA357B9659ADDF7B30195 /* KeyboardTestModel.swift in Sources */,
@@ -474,10 +566,27 @@
 				F39F8BBE17CEE2946637AF10 /* StorageService.swift in Sources */,
 				A0C73FAD5537EFF4DB99E416 /* TouchIDCheckView.swift in Sources */,
 				BFEA86B8291019DA41CFF8DB /* TrackpadCheckView.swift in Sources */,
+				33A71125D2A7ED91283A6F53 /* WatchCompanionService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C6ADCFFE64BD674A18CC0AD4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A30754C1240ED0BF829EA38B /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0E51F0289E4BE266F2907CB0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0B0F8351881B9B20FDFC1CA8 /* MacCheckWatchHelper */;
+			targetProxy = D873ABF1DB7EA631E949355B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		69B40B6BB51CCE8BF6980428 /* InfoPlist.strings */ = {
@@ -551,6 +660,36 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		40756E30AFB8326D865F0F39 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Helpers/WatchHelper/WatchHelper.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.berryxia.maccheck.watchhelper;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		6140E799DD1A4874448DCFAC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Helpers/WatchHelper/WatchHelper.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.berryxia.maccheck.watchhelper;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -665,6 +804,15 @@
 			buildConfigurations = (
 				7603D5695BB392E762810313 /* Debug */,
 				3833BF68A898410D350442DE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B2F8C8D4056E138D1892205C /* Build configuration list for PBXNativeTarget "MacCheckWatchHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				40756E30AFB8326D865F0F39 /* Debug */,
+				6140E799DD1A4874448DCFAC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

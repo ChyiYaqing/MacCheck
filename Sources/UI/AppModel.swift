@@ -1,17 +1,22 @@
 import Foundation
 
 /// 侧边栏导航项。概览 + 系统自动检测分类 + 硬件交互测试。
-enum SidebarItem: String, CaseIterable, Identifiable, Hashable {
+enum SidebarItem: Identifiable, Hashable {
     case overview
     // 系统自动检测
     case specs, battery, security, storage, network, ports
     // 硬件交互测试
     case keyboard, screen, audio, microphone, camera, touchID, trackpad, performance, diskSpeed, portsLive
     case aiModels
+    // iPhone / iPad：每台已连接设备一行（关联 UDID）；未安装 libimobiledevice 时显示安装引导
+    case iosDevice(String), iosSetup
     case history
     case settings
 
-    var id: String { rawValue }
+    var id: String {
+        if case .iosDevice(let udid) = self { return "iosDevice.\(udid)" }
+        return "\(self)"
+    }
 
     var title: String {
         switch self {
@@ -33,6 +38,7 @@ enum SidebarItem: String, CaseIterable, Identifiable, Hashable {
         case .diskSpeed: return L("硬盘测速", "Disk Speed")
         case .portsLive: return L("接口逐口实测", "Port-by-Port Test")
         case .aiModels: return L("AI 大模型", "AI Models")
+        case .iosDevice, .iosSetup: return "iPhone / iPad"
         case .history: return L("历史记录", "History")
         case .settings: return L("设置", "Settings")
         }
@@ -58,6 +64,7 @@ enum SidebarItem: String, CaseIterable, Identifiable, Hashable {
         case .diskSpeed: return "speedometer"
         case .portsLive: return "cable.connector.horizontal"
         case .aiModels: return "sparkles"
+        case .iosDevice, .iosSetup: return "iphone"
         case .history: return "clock.arrow.circlepath"
         case .settings: return "gearshape.fill"
         }
@@ -93,6 +100,7 @@ enum SidebarItem: String, CaseIterable, Identifiable, Hashable {
         case .diskSpeed: return ["diskSpeed"]
         case .portsLive: return ["portsLive"]
         case .aiModels: return []
+        case .iosDevice, .iosSetup: return []
         case .history: return []
         case .settings: return []
         }
@@ -148,6 +156,22 @@ final class AppModel: ObservableObject {
         self.generatedAt = Date()
         self.isScanning = false
         self.hasScanned = true
+    }
+
+    /// 接口页可见期间每 2 秒重新枚举一次接口，插拔设备即时反映；内容不变时不触发界面刷新。
+    func monitorPorts() async {
+        while !Task.isCancelled {
+            if !isScanning {
+                let results = await Task.detached(priority: .utility) { PortService.runAll() }.value
+                for result in results {
+                    let old = autoResults[result.id]
+                    if old?.summary != result.summary || old?.rawDetails != result.rawDetails {
+                        autoResults[result.id] = result
+                    }
+                }
+            }
+            try? await Task.sleep(for: .seconds(2))
+        }
     }
 
     func recordTest(_ result: CheckResult) {

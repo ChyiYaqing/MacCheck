@@ -2,6 +2,7 @@ import SwiftUI
 
 struct RootView: View {
     @StateObject private var model = AppModel()
+    @StateObject private var iosModel = IOSDeviceModel()
     @AppStorage("appTheme") private var themeRawValue = AppTheme.system.rawValue
     @AppStorage(AppLanguage.storageKey) private var languageRawValue = AppLanguage.system.rawValue
 
@@ -21,11 +22,14 @@ struct RootView: View {
             .id(languageRawValue)
         }
         .environmentObject(model)
+        .environmentObject(iosModel)
         .preferredColorScheme(preferredScheme)
         .task { await model.scanIfNeeded() }
+        .task { await iosModel.monitor() }
         .onChange(of: languageRawValue) {
             // 自动检测结果的文案是扫描时生成的，切换语言后重扫一遍
             Task { await model.rescan() }
+            iosModel.rescanAll()
         }
         .onChange(of: model.fullscreenTest?.id) {
             if let test = model.fullscreenTest {

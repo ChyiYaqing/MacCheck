@@ -45,3 +45,23 @@ targets:
         CODE_SIGN_ENTITLEMENTS: Sources/App/MacCheck.entitlements
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         SWIFT_OBJC_BRIDGING_HEADER: Sources/App/MacCheck-Bridging-Header.h
+    dependencies:
+      # Apple Watch 读取辅助程序，放进 Contents/MacOS 供 Bundle.main.url(forAuxiliaryExecutable:) 查找
+      - target: MacCheckWatchHelper
+        embed: true
+        codeSign: true
+        copy:
+          destination: executables
+
+  MacCheckWatchHelper:
+    type: tool
+    platform: macOS
+    sources:
+      - path: Helpers/WatchHelper
+        excludes:
+          - "*.entitlements"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.berryxia.maccheck.watchhelper
+        CODE_SIGN_ENTITLEMENTS: Helpers/WatchHelper/WatchHelper.entitlements
+        SKIP_INSTALL: YES

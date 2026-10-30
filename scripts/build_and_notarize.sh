@@ -47,7 +47,13 @@ lipo "$APP/Contents/MacOS/$APP_NAME" -verify_arch arm64 x86_64
 HAS_CERT=$(security find-identity -v -p codesigning 2>/dev/null | grep -c "Developer ID Application" || true)
 if [ "$HAS_CERT" -gt 0 ]; then
   echo "▸ Developer ID 签名（含 hardened runtime）"
-  codesign --force --deep --options runtime --timestamp \
+  # 由内向外逐个签名并带上各自的 entitlements：--force 重签会丢弃原有 entitlements，
+  # 主 App 会失去摄像头/麦克风权限，Apple Watch 辅助程序会失去「关闭库验证」从而无法加载 Homebrew 库。
+  codesign --force --options runtime --timestamp \
+    --entitlements Helpers/WatchHelper/WatchHelper.entitlements \
+    --sign "$SIGN_ID" "$APP/Contents/MacOS/MacCheckWatchHelper"
+  codesign --force --options runtime --timestamp \
+    --entitlements Sources/App/MacCheck.entitlements \
     --sign "$SIGN_ID" "$APP"
   codesign --verify --strict --verbose=2 "$APP"
   SIGNED=1

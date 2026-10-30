@@ -37,6 +37,10 @@ struct DetailRouter: View {
             PortLiveCheckView { model.recordTest($0) }
         case .aiModels:
             AIModelsView()
+        case .iosDevice(let udid):
+            IOSDeviceView(udid: udid)
+        case .iosSetup:
+            IOSSetupView()
         case .history:
             HistoryView()
         case .settings:
@@ -232,7 +236,7 @@ struct CategoryDetailView: View {
                     }
                 } else {
                     ForEach(results) { result in
-                        resultCard(result)
+                        ResultCard(result: result)
                     }
                 }
             }
@@ -241,9 +245,17 @@ struct CategoryDetailView: View {
             .frame(maxWidth: .infinity, alignment: .center)
         }
         .navigationTitle(item.title)
+        .task(id: item) {
+            if item == .ports { await model.monitorPorts() }
+        }
     }
+}
 
-    private func resultCard(_ result: CheckResult) -> some View {
+/// 单项检测结果卡片：状态 + 人话结论 + 红旗说明 + 原始数据。
+struct ResultCard: View {
+    let result: CheckResult
+
+    var body: some View {
         Card {
             HStack(alignment: .top, spacing: DS.Spacing.md) {
                 Image(systemName: result.status.symbolName)

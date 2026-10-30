@@ -19,7 +19,7 @@ cd "$(dirname "$0")/.."
 PROJECT="MacCheck.xcodeproj"
 SCHEME="MacCheck"
 APP_NAME="MacCheck"
-VERSION="1.3"
+VERSION="1.4"
 BUILD_DIR="build_release"
 DMG_OUT="$HOME/Desktop/${APP_NAME}-${VERSION}.dmg"
 
@@ -42,7 +42,9 @@ xcodebuild -project "$PROJECT" -scheme "$SCHEME" -configuration Release \
 APP="$BUILD_DIR/Build/Products/Release/${APP_NAME}.app"
 echo "▸ 架构检查（必须同时含 arm64 与 x86_64）"
 lipo -info "$APP/Contents/MacOS/$APP_NAME"
-lipo "$APP/Contents/MacOS/$APP_NAME" -verify_arch arm64 x86_64
+for ARCH in arm64 x86_64; do   # 新版 lipo 的 -verify_arch 一次只接受一个架构
+  lipo "$APP/Contents/MacOS/$APP_NAME" -verify_arch "$ARCH"
+done
 
 HAS_CERT=$(security find-identity -v -p codesigning 2>/dev/null | grep -c "Developer ID Application" || true)
 if [ "$HAS_CERT" -gt 0 ]; then

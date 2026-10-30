@@ -22,6 +22,8 @@ hdiutil verify ~/Desktop/MacCheck-1.3.dmg
 
 ## 自动检测项目
 
+iPhone / iPad 检测回归测试：`bash scripts/test_ios_device.sh`。用数据线连接已信任且已解锁的设备时，可加 `--live` 读取真机（只输出机型与各项状态，不输出序列号）；连接的 iPhone 若配对了 Apple Watch，也会经由内嵌辅助程序 `MacCheckWatchHelper` 读取手表。发布包需由脚本分别签名主 App 与辅助程序，确保辅助程序保留「关闭库验证」entitlement，否则无法加载 Homebrew 的 libimobiledevice。
+
 账户检测回归测试：`bash scripts/test_management.sh`。在已登录 Apple 账户的开发机上，可加 `--live` 验证实际登录状态、账号及姓名的读取（测试不输出个人资料）。
 
 Apple ID 详情读取兼容旧版 `MobileMeAccounts`，并结合当前用户的账户状态缓存和只读 `Accounts4.sqlite` 查询。数据库联查方式参考 [Kolide 的公开方案](https://github.com/kolide/launcher/issues/1748)；仅选择 `com.apple.account.AppleAccount` 类型的活动账户，排除 App Store、邮件等其他账户。缺少读取权限或系统结构变化时，显示资料不可用；缓存并非在线认证结果，交易前仍需在系统设置核对。截图及导出报告会包含已读取的账号、姓名，分享前请脱敏。

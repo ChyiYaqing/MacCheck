@@ -29,7 +29,7 @@ struct ReportDocumentView: View {
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(.black)
                 if let p = profile {
-                    Text("\(p.chip) · \(p.memory) · \(p.macOSVersion)")
+                    Text([p.chip, p.memory, p.macOSVersion].filter { !$0.isEmpty }.joined(separator: " · "))
                         .font(.system(size: 12)).foregroundStyle(.gray)
                     Text(L("序列号 \(p.serialNumber) · \(p.modelIdentifier)", "Serial number \(p.serialNumber) · \(p.modelIdentifier)"))
                         .font(.system(size: 11, design: .monospaced)).foregroundStyle(.gray)

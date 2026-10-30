@@ -16,6 +16,7 @@ MacCheck is a local macOS inspection tool for buying and selling used Macs, in-s
 - Interactive tests: per-key keyboard highlighting, solid-color / grayscale / checkerboard display patterns, audio, microphone, camera, Touch ID, trackpad, and more
 - Disk read/write speed test, performance stress test, and port-by-port testing
 - Local AI model suitability: estimates which local LLMs this Mac can run based on its memory
+- iPhone / iPad checks over USB: model, serial number/IMEI, sales channel (retail / refurbished / replacement), battery cycles and health, activation and supervision status, with report export; also lists Apple Watches paired with a connected iPhone (model, watchOS version, serial number, sales channel, current charge)
 - One-click export of a PDF or long PNG report, with saved history for later comparison
 - Appearance options: follow system, light, or dark
 - English and Chinese UI: Settings → Language (System / 中文 / English); follows the macOS system language by default
@@ -28,6 +29,7 @@ MacCheck is a local macOS inspection tool for buying and selling used Macs, in-s
 - Apple Silicon or Intel Mac
 - Xcode 16 or later to build from source
 - Optional: `xcodegen`, to regenerate the Xcode project from `project.yml`
+- Optional: `brew install libimobiledevice`, for iPhone / iPad checks (unlock the device and tap "Trust This Computer")
 
 ## Quick Install
 
